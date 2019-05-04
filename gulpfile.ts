@@ -1,8 +1,12 @@
 import { ThemeSettings } from './theme-settings';
 import * as gulp from 'gulp';
 import del from 'del';
+import * as debug from 'gulp-debug';
+import * as sourcemaps from 'gulp-sourcemaps';
+import * as cleanCSS from 'gulp-clean-css';
 const rename = require('gulp-rename');
 const cheerio = require('gulp-cheerio');
+const sass = require('gulp-sass');
 
 const themeSettings = new ThemeSettings();
 
@@ -24,9 +28,16 @@ function clean(){
  * Transpile, minify and combine script
  * @param cb 
  */
-function styles(cb){
-    cb();
-
+function styles(){
+    return gulp.src('./src/styles/**/*.scss')
+    .pipe(sourcemaps.init())
+    .pipe(sass({
+            outputStyle: 'compressed'
+        }).on('error', sass.logError))
+    .pipe(cleanCSS({level: 2}))
+    .pipe(rename('theme.min.css'))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/css`))
 }
 
 /**
@@ -104,7 +115,8 @@ function html(){
 
 function watch() {
     gulp.watch('theme-settings.ts', manifest);
-    gulp.watch(['**/*.ascx', '!node_modules'], html);
+    gulp.watch('./src/html/**/*.ascx', html);
+    gulp.watch('./src/styles/**/*.scss', styles);
 }
 
 exports.default = gulp.series(
