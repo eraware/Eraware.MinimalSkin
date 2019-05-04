@@ -1,0 +1,10 @@
+{
+  "name": "@valadas/eraware-minimalskin",
+  "version": "1.0.0",
+  "description": "Minimal Dnn Skin",
+  "main": "index.js",
+  "repository": "https://github.com/valadas/Eraware.MinimalSkin",
+  "author": "valadas <info@danielvaladas.com>",
+  "license": "MIT",
+  "private": false
+}
