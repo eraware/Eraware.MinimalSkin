@@ -6,5 +6,9 @@
   "repository": "https://github.com/valadas/Eraware.MinimalSkin",
   "author": "valadas <info@danielvaladas.com>",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "devDependencies": {
+    "gulp": "^4.0.1",
+    "gulp-cli": "^2.2.0"
+  }
 }
