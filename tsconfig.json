@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "module": "es2015",
+        "removeComments": true,
+        "sourceMap": true,
+        "target": "es5"
+    }
+}
