@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theme>
+  
+  <!-- The version of the theme, don't forget to bump that version on every new release if you want Dnn to upgrade it -->
+  <version>1.0.0</version>
+
+  <!-- The package name must be unique and be a valid folder name, so avoir spaces and special charaters -->
+  <!-- It is recommended to use your company or own name as a prefix to avoir name claches with other developers -->
+  <packageName>eraware.ca.themes.minimal</packageName>
+  
+  <!-- The friendly name is a human readable theme name and shows in the extension panel, themes panel, theme selection dropdowns, etc. -->
+  <friendlyName>Eraware Minimal Theme</friendlyName>
+
+  <!-- The theme description is a longer description for your theme and shows in the extensions panel and it theme selection tooltips, etc. -->
+  <!-- Be carefull to keep this file as valid xml if you need to use special characters, see https://www.w3.org/People/mimasa/test/xhtml/entities/entities.xml -->
+  <description>
+    The Eraware &quot;Minimal&quot; theme is built for speed and simplicity. 
+    It has a single minified css and js file. 
+    It also avoids loading the Dnn default.css and uses a single variables file to allow easy customization from a single place.
+  </description>
+
+  <!-- Every single Dnn package (extension) needs all of the following information about the extension owner -->
+  <owner>
+    <name>Daniel Valadas</name>
+    <organization>Eraware</organization>
+    <url>https://eraware.ca</url>
+    <email>info@danielvaladas.com</email>
+  </owner>
+
+</theme>
