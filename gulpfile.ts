@@ -1,9 +1,7 @@
-const { 
-    dest,
-    parallel,
-    series,
-    src
-} = require('gulp');
+import { ThemeSettings } from './theme-settings';
+import * as gulp from 'gulp';
+const rename = require('gulp-rename');
+const cheerio = require('gulp-cheerio');
 
 /**
  * Cleans the generated files
@@ -42,24 +40,61 @@ function images(cb){
 /**
  * Generates or updates the Dnn manifest
  */
-function manifest(cb) {
-    cb();
+function manifest() {
+    const themeSettings = new ThemeSettings();
+    return gulp.src('./manifest.xml')
+    .pipe(
+        cheerio( 
+            {
+                run: function ($, file, done) {
+                    const pack = $('packages package');
+                    pack.attr('name', themeSettings.packageName);
+                    pack.attr('version', themeSettings.version);
+                    $('friendlyName', pack).text(themeSettings.friendlyName);
+                    $('description', pack).text(themeSettings.description);
+                    const owner = $('owner', pack);
+                    $('name', owner).text(themeSettings.ownerName);
+                    $('organization', owner).text(themeSettings.ownerOrganization);
+                    $('url', owner).text(themeSettings.ownerUrl);
+                    $('email', owner).text(themeSettings.ownerEmail);
+                    const components = $('components', pack);
+                    const skinFiles = $('component[type="Skin"] skinFiles', components);
+                    $('skinName', skinFiles).text(themeSettings.friendlyName);
+                    $('basePath', skinFiles).text(themeSettings.skinpath);
+                    const skinComponent = $('component[type="ResourceFile"]')[0];
+                    $('resourceFiles basePath', skinComponent).text(themeSettings.skinpath);
+                    const containersComponent = $('component[type="ResourceFile"]')[1];
+                    $('resourceFiles basePath', containersComponent).text(themeSettings.containersPath);
+                    done();
+                },
+                parserOptions: {
+                    xmlMode: true,
+                    lowerCaseTags: false,
+                    decodeEntities: false
+                }
+            }
+        )
+    )        
+    .pipe(rename('manifest.dnn'))
+    .pipe(gulp.dest('./dist'));
 }
 
 /**
  * Packages the theme for distribution
  * @param cb
  */
-function package(cb){
+function packageModule(cb){
     cb();
 }
 
-exports.default = series(
+function watch() {
+    gulp.watch('gulpfile.ts', manifest);
+}
+
+exports.watch = watch;
+exports.default = gulp.series(
     clean,
-    parallel(styles, scripts, images, manifest),
-    package,
+    gulp.parallel(styles, scripts, images, manifest),
+    packageModule,
     clean
 );
-
-// Notes
-// clean -> (js, css, manifest, images) -> package -> clean
