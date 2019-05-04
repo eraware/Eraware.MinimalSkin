@@ -1,15 +1,23 @@
 import { ThemeSettings } from './theme-settings';
 import * as gulp from 'gulp';
+import del from 'del';
 const rename = require('gulp-rename');
 const cheerio = require('gulp-cheerio');
+
+const themeSettings = new ThemeSettings();
 
 /**
  * Cleans the generated files
  * @param cb {any} any
  * 
  */
-function clean(cb){
-    cb();
+function clean(){
+    return del([
+        `../Skins/${themeSettings.packageName}/**/*`,
+        `../Containers/${themeSettings.packageName}/**/*`
+    ], {
+        force: true
+    });
 }
 
 /**
@@ -40,8 +48,7 @@ function images(cb){
 /**
  * Generates or updates the Dnn manifest
  */
-function manifest() {
-    const themeSettings = new ThemeSettings();
+function manifest() {    
     return gulp.src('./manifest.xml')
     .pipe(
         cheerio( 
@@ -76,7 +83,7 @@ function manifest() {
         )
     )        
     .pipe(rename('manifest.dnn'))
-    .pipe(gulp.dest('./dist'));
+    .pipe(gulp.dest(`./../Skins/${themeSettings.packageName}`));
 }
 
 /**
@@ -87,14 +94,23 @@ function packageModule(cb){
     cb();
 }
 
-function watch() {
-    gulp.watch('gulpfile.ts', manifest);
+/**
+ * Copies the html templates (ascx)
+ */
+function html(){
+    return gulp.src(['src/html/**/*.ascx', '!node_modules'])
+    .pipe(gulp.dest(`../Skins/${themeSettings.packageName}`))
 }
 
-exports.watch = watch;
+function watch() {
+    gulp.watch('theme-settings.ts', manifest);
+    gulp.watch(['**/*.ascx', '!node_modules'], html);
+}
+
 exports.default = gulp.series(
     clean,
-    gulp.parallel(styles, scripts, images, manifest),
-    packageModule,
-    clean
-);
+    gulp.parallel(html, styles, scripts, images, manifest),
+    packageModule
+    );
+exports.watch = watch;
+exports.cleanup = clean;
