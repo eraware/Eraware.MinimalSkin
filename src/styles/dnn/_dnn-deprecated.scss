@@ -1,0 +1,366 @@
+/* text style used for help text rendered by modules */
+.Help {
+    padding: 2px;
+    border: #000 1px solid;
+    background-color: #ff9;
+    font-weight: normal;
+    font-size: 11px;
+    color: #000;
+}
+
+/*-------------------------------------*/
+/* IMAGE STYLES */
+/*-------------------------------------*/
+img.dnn-scale-img {
+    max-width: 100%;
+    height: auto;
+}
+
+img {
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+    vertical-align: middle;
+}
+
+/*-------------------------------------*/
+/* TABLE STYLES */
+/*-------------------------------------*/
+.dnnTableHeader {
+    display: block;
+    padding: 15px;
+    background: none repeat scroll 0 0 #E3E3E5;
+}
+.dnnTableHeader a,
+.dnnTableHeader input, 
+.dnnTableHeader select{
+    margin: 0;
+}
+
+/* table filter styles */
+.dnnTableFilter {
+    margin-bottom: 18px;
+    background: rgba(0,0,0,0.04);
+}
+
+    .dnnTableFilter .dnnTableDisplay {
+        margin-bottom: 0;
+    }
+
+.dnnFilterSet {
+    padding: 18px;
+}
+
+    .dnnFilterSet label {
+        display: inline-block;
+    }
+
+    .dnnFilterSet input,
+    .dnnFilterSet select {
+        display: inline-block;
+        margin: 0 5px;
+    }
+
+/* table filter vertical styles */
+.verticalFilter .dnnFilterSet {
+    float: left;
+    width: 20%;
+    padding: 2% 18px;
+}
+
+.verticalFilter .dnnTableDisplay {
+    float: right;
+    width: 75%;
+}
+
+.verticalFilter input[type=search], .verticalFilter select, .verticalFilter input[type=text] {
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box; /* Firefox */
+    -webkit-box-sizing: border-box; /* Safari */
+}
+
+
+
+/*-------------------------------------*/
+/* PAGINATION & RESULT STYLES */
+/*-------------------------------------*/
+.dnnResults {
+    float: left;
+    margin-bottom: 0;
+}
+
+.dnnPagination {
+    float: right;
+    margin: 0;
+    padding: 0;
+}
+
+    .dnnPagination li {
+        float: left;
+        list-style: none;
+    }
+
+        .dnnPagination li a, .dnnPagination li span {
+            display: inline-block;
+            padding: 0 5px;
+            text-decoration: none;
+            color: #333;
+        }
+
+            .dnnPagination li a:hover {
+                text-decoration: underline;
+                color: #222;
+            }
+
+        .dnnPagination li span {
+            color: #222;
+            text-decoration: underline;
+        }
+
+
+
+
+        /* button style for standard HTML buttons */
+.StandardButton {
+    border: 1px solid blue;
+}
+
+/* Re-set default cursor for disabled elements */
+.dnnFormItem button[disabled],
+.dnnFormItem input[disabled] {
+    cursor: default;
+    opacity: 0.5;
+}
+
+/* Consistent box sizing and appearance */
+.dnnFormItem input[type="checkbox"],
+.dnnFormItem input[type="radio"] {
+    *width: 13px;
+    *height: 13px; /*why are we using hacks here*/
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.dnnFormItem input[type="search"] {
+    -webkit-appearance: textfield;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+    .dnnFormItem input[type="search"]::-webkit-search-decoration,
+    .dnnFormItem input[type="search"]::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+    }
+
+    /* Remove inner padding and border in FF3/4: h5bp.com/l */
+.dnnFormItem button::-moz-focus-inner, .dnnFormItem input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+/*
+	 * 1. Remove default vertical scrollbar in IE6/7/8/9
+	 * 2. Allow only vertical resizing
+	 */
+
+.dnnFormItem textarea {
+    overflow: auto;
+    vertical-align: top;
+    resize: vertical;
+}
+
+    /* Colors for form validity */
+    .dnnFormItem input:valid, .dnnFormItem textarea:valid {
+    }
+
+    .dnnFormItem input:invalid, .dnnFormItem textarea:invalid {
+        background-color: #f0dddd;
+    }
+
+/*-------------------------------------*/
+/* LOGIN TAB GROUP - Not sure if still needed */
+/*-------------------------------------*/
+.dnnLogin{
+    .LoginTabGroup {
+        display: inline-block;
+        width: 100%;
+        height: 37px;
+        margin-left: 0;
+        margin-top: 5px;
+        border-bottom: 1px solid #C2C2C2;
+        span{
+            margin-right: 4px;
+            margin-bottom: 0;
+            border-bottom: 0 none;
+            border-radius: var(--dnn-controls-radius, 3px) var(--dnn-controls-radius, 3px) 0 0;
+            box-shadow: none;
+            .LoginTabSelected {
+                margin-top: -3px;
+                padding: 12px 9px 10px;
+                background: none repeat scroll 0 0 #FFFFFF;
+            }
+        }
+    }
+}    
+
+/* Information Feedback Aside */
+.dnnForm fieldset.dnnFormInformation {
+    float: left;
+    width: 32.075%;
+    margin-left: 16px;
+    padding: 18px 0;
+    background: rgba(0,0,0,0.05);
+}
+
+
+/* Short Form */
+.dnnForm.dnnShortForm .dnnFormItem label {
+    float: none;
+    width: 100%;
+    margin-bottom: 0.25em;
+    text-align: left;
+}
+
+.dnnForm.dnnShortForm .dnnFormItem input,
+.dnnForm.dnnShortForm .dnnFormItem select,
+.dnnForm.dnnShortForm .dnnFormItem textarea {
+    float: none;
+    text-align: left;
+}
+
+.dnnForm.dnnShortForm .dnnFormItem a.dnnFormHelp {
+    background-position: left;
+    padding-left: 22px;
+}
+
+/*-------------------------------------*/
+/* MODULE TITLE - used in DDR Menu but very old */
+/*-------------------------------------*/
+.MainMenu_MenuContainer {
+    border: 1px solid green;
+}
+
+input.dnnSmallSizeComboBox {
+    width: 100px !important;
+    margin-right: 10px;
+    float: left;
+}
+
+div.dnnSmallSizeComboBox {
+    width: 118px !important;
+    margin-right: 15px;
+    float: left;
+}
+
+.dnnSmallSizeComboBox + a.dnnSecondaryAction {
+    float: left;
+    margin-right: 10px;
+}
+
+.dnnVerticalTabs li {
+    list-style: none;
+}
+
+    .dnnVerticalTabs li a {
+        display: block;
+        padding: 15px 15px;
+        border-bottom: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        background: rgba(0, 0, 0, 0.04);
+        color: #999;
+        text-decoration: none;
+    }
+
+        .dnnVerticalTabs li a:hover {
+            background: rgba(0, 0, 0, 0.06);
+            color: #333;
+        }
+
+    .dnnVerticalTabs li.active a {
+        background: none;
+        color: #333;
+        border-right: 1px solid transparent;
+    }
+
+.tabBody {
+    display: none;
+}
+
+
+
+
+/*-------------------------------------*/
+/* UPGRADE FIXES */
+/*-------------------------------------*/
+
+/* Compatible with some old forge modules---*/
+div.ModDNNAnnouncementsC table.ucLinkTypeRadioButtons label {
+    display: inline !important;
+}
+
+div.ModDNNAnnouncementsC table.ucLinkTypeRadioButtons span.dnnRadiobutton {
+    display: inline !important;
+}
+
+div.ModDNNAnnouncementsC .urlControl label, div.ModDNNLinksC .urlControl label {
+    display: inline !important;
+}
+
+div.ModDNNFAQsC .Normal {
+    width: auto !important;
+}
+
+div.ModDNNFeedbackC .dnnFormItem > label {
+    display: inline-block;
+    width: 33%;
+    text-align: right;
+}
+
+div.ModDNNUserDefinedTableC div.RadEditor {
+    height: auto !important;
+}
+
+div.ModDNNUserDefinedTableC ul.dnnActions {
+    display: block;
+}
+
+div.ModDNNIFrameC .urlControl span.dnnRadiobutton {
+    display: inline !important;
+}
+
+div.ModDNNIFrameC table.Normal td .dnnLabel {
+    width: 100px;
+}
+
+div.ModDNNIFrameC table.Normal td span.dnnRadiobutton {
+    margin: 5px 0 0 30px;
+}
+
+div.ModDNNLinksC .urlControl span.dnnRadiobutton {
+    display: inline !important;
+}
+
+* used to set the different module align options - from module settings */
+.DNNAlignleft {
+    text-align: left;
+}
+
+.DNNAlignright {
+    text-align: right;
+}
+
+.DNNAligncenter {
+    text-align: center;
+}
+
+/* used to collapse panes without any content in them, this conflicts with so much stuff
+    if anything breaks due to this removal, the other things needs a fix, not this.
+*/
+body:not(.dnnEditState) .DNNEmptyPane {
+    width: 0px;
+}
+
+input[type="button"].rspCollapseBarSpacer
+{ min-width: 0; padding: 0 0; }

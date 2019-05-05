@@ -7,6 +7,7 @@ import * as cleanCSS from 'gulp-clean-css';
 const rename = require('gulp-rename');
 const cheerio = require('gulp-cheerio');
 const sass = require('gulp-sass');
+const browserSync = require('browser-sync').create();
 
 const themeSettings = new ThemeSettings();
 
@@ -110,13 +111,17 @@ function packageModule(cb){
  */
 function html(){
     return gulp.src(['src/html/**/*.ascx', '!node_modules'])
-    .pipe(gulp.dest(`../Skins/${themeSettings.packageName}`))
+    .pipe(gulp.dest(`../Skins/${themeSettings.packageName}`, {overwrite: true}));
 }
 
 function watch() {
+    browserSync.init({
+        proxy: "http://dnn932clean.localtest.me/"
+    });
     gulp.watch('theme-settings.ts', manifest);
     gulp.watch('./src/html/**/*.ascx', html);
     gulp.watch('./src/styles/**/*.scss', styles);
+    gulp.watch('./**/*').on("change", browserSync.reload);
 }
 
 exports.default = gulp.series(

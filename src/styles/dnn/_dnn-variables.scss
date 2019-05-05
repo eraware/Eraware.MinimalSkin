@@ -1,0 +1,43 @@
+
+:root {
+
+    --dnn-color-primary: rgb(2,139,255);
+    --dnn-color-primary-light: #36a1ff;
+    --dnn-color-primary-dark: #026ecc;
+    --dnn-color-primary-contrast: #efefef;
+
+    --dnn-color-secondary: #f5f5f5;
+    --dnn-color-secondary-light: #dfdfdf;
+    --dnn-color-secondary-dark: #999;
+    --dnn-color-secondary-contrast: #222;
+
+    --dnn-color-tertiary: #f2f2f2;
+    --dnn-color-tertiary-light: #eaeaea;
+    --dnn-color-tertiary-dark: #d8d8d8;
+    --dnn-color-tertiary-contrast: #333;
+
+    --dnn-color-danger: rgba(255,0,0,0.9);
+
+
+    --dnn-form-error-color: rgba(255,0,0,0.15);
+    --dnn-form-error-border-color: rgba(255,0,0,0.2);
+    --dnn-form-info-color: rgba(2,139,255,0.15);
+    --dnn-form-info-border-color: rgba(2,139,255,0.2);
+    --dnn-form-success-color: rgba(0,255,0,0.15);
+    --dnn-form-success-border-color: rgba(0,255,0,0.2);
+    --dnn-form-warning-color: rgba(255,255,0,0.15);
+    --dnn-form-warning-border-color: #CDB21F;
+    
+
+    --dnn-base-font-size: 13px;
+    --dnn-disabled-text-color: #999;
+    --dnn-normal-text-color: #444;
+    --dnn-dark-text-color: #333;
+    --dnn-darker-text-color: #222;
+
+    --dnn-controls-radius: 3px;
+    --dnn-controls-border-size: 1px;
+
+    --dnn-inputs-background-color: #fff;
+    --dnn-inputs-border-color: #c9c9c9;  
+}
