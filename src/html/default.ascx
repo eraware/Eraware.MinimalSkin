@@ -3,8 +3,6 @@
 
 <!--#include file="partials/_header.ascx" -->
 
-<main>
-    <div id="ContentPane" runat="server"></div>
-</main>
+<!--#include file="partials/_panes.ascx" -->
 
 <!--#include file="partials/_footer.ascx" -->
