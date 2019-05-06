@@ -33,7 +33,7 @@ function clean(){
  * @param cb 
  */
 function styles(){
-    return gulp.src('./src/styles/**/*.scss')
+    return gulp.src('./src/styles/main.scss')
     .pipe(sourcemaps.init())
     .pipe(sass({
             outputStyle: 'compressed'
@@ -125,8 +125,13 @@ function packageModule(cb){
  * Copies the html templates (ascx)
  */
 function html(){
-    return gulp.src(['src/html/**/*.ascx', '!node_modules'])
+    return gulp.src('src/html/**/*.ascx')
     .pipe(gulp.dest(`../Skins/${themeSettings.packageName}`, {overwrite: true}));
+}
+
+function menu(){
+    return gulp.src('src/html/menus/**/*')
+    .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/menus`, {overwrite: true}));
 }
 
 function watch() {
@@ -135,6 +140,7 @@ function watch() {
     });
     gulp.watch('./theme-settings.ts', manifest);
     gulp.watch('./src/html/**/*.ascx', html);
+    gulp.watch('./src/html/menus/**/*', menu);
     gulp.watch('./src/styles/**/*.scss', styles);
     gulp.watch('./src/scripts/*.ts', scripts);
     gulp.watch('./**/*').on("change", browserSync.reload);
@@ -142,7 +148,7 @@ function watch() {
 
 exports.default = gulp.series(
     clean,
-    gulp.parallel(html, styles, scripts, images, manifest),
+    gulp.parallel(html, menu, styles, scripts, images, manifest),
     packageModule
     );
 exports.watch = watch;
