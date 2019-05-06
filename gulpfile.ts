@@ -134,6 +134,11 @@ function menu(){
     .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/menus`, {overwrite: true}));
 }
 
+function fonts(){
+    return gulp.src('node_modules/@fortawesome/fontawesome-free/webfonts/*')
+    .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/webfonts`));
+}
+
 function watch() {
     browserSync.init({
         proxy: "http://dnn932clean.localtest.me/"
@@ -148,8 +153,9 @@ function watch() {
 
 exports.default = gulp.series(
     clean,
-    gulp.parallel(html, menu, styles, scripts, images, manifest),
+    gulp.parallel(html, menu, styles, scripts, images, manifest, fonts),
     packageModule
     );
 exports.watch = watch;
 exports.cleanup = clean;
+exports.styles = styles;
