@@ -4,6 +4,9 @@ import del from 'del';
 import * as debug from 'gulp-debug';
 import * as sourcemaps from 'gulp-sourcemaps';
 import * as cleanCSS from 'gulp-clean-css';
+import * as ts from 'gulp-typescript';
+import * as concat from 'gulp-concat';
+import * as uglify from 'gulp-uglify';
 const rename = require('gulp-rename');
 const cheerio = require('gulp-cheerio');
 const sass = require('gulp-sass');
@@ -45,8 +48,20 @@ function styles(){
  * Transpile, minify and combine script
  * @param cb 
  */
-function scripts(cb){
-    cb();
+function scripts(){
+    return gulp.src(['./node_modules/bootstrap/dist/js/bootstrap.bundle.js','./src/**/*.ts'])
+    .pipe(sourcemaps.init())
+    .pipe(ts({
+        module: "commonjs", 
+        target: "es5", 
+        allowJs: true, 
+        noImplicitAny: true, 
+        moduleResolution: "node"
+    }))
+    .pipe(concat('skin.min.js'))
+    .pipe(uglify())
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/js`));
 }
 
 /**
@@ -118,9 +133,10 @@ function watch() {
     browserSync.init({
         proxy: "http://dnn932clean.localtest.me/"
     });
-    gulp.watch('theme-settings.ts', manifest);
+    gulp.watch('./theme-settings.ts', manifest);
     gulp.watch('./src/html/**/*.ascx', html);
     gulp.watch('./src/styles/**/*.scss', styles);
+    gulp.watch('./src/scripts/*.ts', scripts);
     gulp.watch('./**/*').on("change", browserSync.reload);
 }
 

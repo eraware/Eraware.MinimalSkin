@@ -1,6 +1,7 @@
 <div style="max-width: 1200px; margin: 0 auto;">
 <!--#include file="_registers.ascx" -->
 
+<!--#include file="_bootstrap.ascx" -->
 <!--#include file="_jquery-ui-resizable.ascx" -->
 <!--#include file="_login.ascx" -->
 <!--#include file="_ux_jquery_tabs.ascx" -->

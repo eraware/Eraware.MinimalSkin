@@ -1,0 +1,142 @@
+@import 'node_modules/bootstrap/scss/bootstrap';
+
+// BACKGROUND COLORS
+.bg-primary{
+    background-color: var(--dnn-color-primary, var(--primary))!important;
+}
+.bg-secondary {
+    background-color: var(--dnn-color-secondary, var(--secondary))!important;
+}
+
+// BORDERS
+.border-primary {
+    border-color: var(--dnn-color-primary, var(--primary))!important;
+}
+.border-secondary {
+    border-color: var(--dnn-color-secondary, var(--secondary))!important;
+}
+
+// NAVBAR
+.navbar-dark .navbar-nav .nav-link{
+    color: var(--dnn-color-primary-contrast, --rgba(255,255,255,0));
+}
+
+// BUTTONS
+.btn {
+    border-width: var(--dnn-controls-border-size, 1px);
+    border-radius: var(--dnn-controls-radius, 0.25rem);
+    transition: all .15s ease-in-out;
+}
+.btn-primary, .btn-primary.disabled {
+    background-color: var(--dnn-color-primary, var(--primary));
+    border-color: var(--dnn-color-primary, var(--primary));
+    color: var(--dnn-color-primary-contrast, white);    
+}
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle, .btn-primary:hover{
+    background-color: var(--dnn-color-primary, var(--primary));
+    border-color: var(--dnn-color-primary-dark, var(--primary));
+    filter: saturate(1.2) contrast(1.2) brightness(0.8) ;
+}
+.btn-secondary, .btn-secondary.disabled {
+    background-color: var(--dnn-color-secondary, var(--secondary));
+    border-color: var(--dnn-color-secondary, var(--secondary));
+    color: var(--dnn-color-secondary-contrast, white);
+}
+.btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle, .btn-secondary:hover{
+    background-color: var(--dnn-color-secondary, var(--secondary));
+    border-color: var(--dnn-color-secondary-dark, var(--secondary));
+    filter: saturate(1.1) contrast(1.1) brightness(0.9) ;
+}
+.btn-secondary:hover{
+    color: var(--dnn-color-secondary-contrast, white);
+}
+.btn-link{
+    color: var(--dnn-color-primary, var(--primary));
+}
+.btn-outline-primary{
+    color: var(--dnn-color-primary, var(--primary));
+    border-color: var(--dnn-color-primary-dark, var(--primary));
+}
+.btn-outline-primary:hover{
+    color: var(--dnn-color-primary-contrast, white);
+    border-color: var(--dnn-color-primary-dark, var(--primary));
+    background-color: var(--dnn-color-primary, var(--primary));    
+}
+.btn-outline-secondary{
+    color: var(--dnn-color-secondary, var(--secondary));
+    border-color: var(--dnn-color-secondary-dark, var(--secondary));
+}
+.btn-outline-secondary:hover{
+    color: var(--dnn-color-secondary-contrast, white);
+    border-color: var(--dnn-color-secondary-dark, var(--secondary));
+    background-color: var(--dnn-color-secondary, var(--secondary));    
+}
+
+// TABLES
+.table-primary, .table-primary th, .table-primary td{
+    background-color: var(--dnn-color-primary-light, var(--primary));
+    border-color: var(--dnn-color-primary-dark, var(--primary));
+}
+.table-secondary, .table-secondary th, .table-secondary td{
+    background-color: var(--dnn-color-secondary-light, var(--secondary));
+    border-color: var(--dnn-color-secondary-dark, var(--secondary));
+}
+
+// FORMS
+.form-control{
+    background-color: var(--dnn-imputs-background-color, #fff);
+    border-color: var(--dnn-inputs-border-color, #ced4da);
+    border-radius: var(--dnn-controls-radius, 0.25rem);
+    border-width: var(--dnn-controls-border-size, 1px);
+}
+
+// CONTROLS
+.custom-control-input:checked~.custom-control-label::before {
+    border-color: var(--dnn-color-primary, var(--primary));
+    background-color: var(--dnn-color-primary, var(--primary));
+}
+
+// LINKS
+a {
+    color: var(--dnn-color-primary, var(--primary));
+}
+a:hover {
+    color: var(--dnn-color-primary-dark, var(--primary));
+}
+
+// NAV - PILLS
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    background-color: var(--dnn-color-primary, var(--primary));
+}
+
+// PAGER
+.page-link {  
+    color: var(--dnn-color-primary, var(--primary));
+}
+.page-item.active .page-link {    
+    color: var(--dnn-color-primary-contrast, #fff);
+    background-color: var(--dnn-color-primary, var(--primary));
+    border-color: var(--dnn-color-primary, var(--primary));
+}
+
+// BADGES
+.badge-primary {
+    color:var(--dnn-color-primary-contrast, var(#fff));
+    background-color: var(--dnn-color-primary, var(--primary));
+}
+.badge-secondary {
+    color:var(--dnn-color-secondary-contrast, var(#fff));
+    background-color: var(--dnn-color-secondary, var(--secondary));
+}
+
+// PROGRESS BARS
+.progress-bar {        
+    background-color: var(--dnn-color-primary, var(--primary));
+}
+
+// LIST GROUPS
+.list-group-item.active {
+    color: var(--dnn-color-primary-contrast);
+    background-color: var(--dnn-color-primary, var(--primary));
+    border-color: var(--dnn-color-primary, var(--primary));
+}
