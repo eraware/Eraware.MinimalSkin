@@ -139,6 +139,11 @@ function fonts(){
     .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/webfonts`));
 }
 
+function doctype(){
+    return gulp.src('./skin.doctype.xml')
+    .pipe(gulp.dest(`../Skins/${themeSettings.packageName}`));
+}
+
 function watch() {
     browserSync.init({
         proxy: "http://dnn932clean.localtest.me/"
@@ -153,7 +158,7 @@ function watch() {
 
 exports.default = gulp.series(
     clean,
-    gulp.parallel(html, menu, styles, scripts, images, manifest, fonts),
+    gulp.parallel(html, menu, styles, scripts, images, manifest, fonts, doctype),
     packageModule
     );
 exports.watch = watch;
