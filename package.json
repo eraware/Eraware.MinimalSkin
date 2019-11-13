@@ -7,6 +7,10 @@
   "author": "valadas <info@danielvaladas.com>",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "package": "gulp",
+    "watch": "gulp watch"
+  },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",
     "@types/bootstrap": "^4.3.0",

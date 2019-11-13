@@ -25,7 +25,7 @@ export class ThemeSettings {
     constructor() {
 
         // The version of the theme, don't forget to bump that version on every new release if you want Dnn to upgrade it
-        this.version = "1.0.0"; 
+        this.version = "0.1.0"; 
 
         // The package name must be unique and be a valid folder name, so avoid spaces and special charaters 
         // It is recommended to use your company or own name as a prefix to avoid name claches with other developers
