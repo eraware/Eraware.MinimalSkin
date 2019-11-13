@@ -84,6 +84,7 @@ function manifest() {
         cheerio( 
             {
                 run: function ($, file, done) {
+                    // Cedit package info
                     const pack = $('packages package');
                     pack.attr('name', themeSettings.packageName);
                     pack.attr('version', themeSettings.version);
@@ -132,6 +133,14 @@ function html(){
     .pipe(gulp.dest(`../Skins/${themeSettings.packageName}`, {overwrite: true}));
 }
 
+/**
+ * Copies containers html templates (ascx)
+ */
+function containersHtml(){
+    return gulp.src('src/containers/**/*.ascx')
+    .pipe(gulp.dest(`../Containers/${themeSettings.packageName}`, {overwrite: true}));
+}
+
 function menu(){
     return gulp.src('src/html/menus/**/*')
     .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/menus`, {overwrite: true}));
@@ -163,6 +172,7 @@ function watch() {
         });
         gulp.watch('./theme-settings.ts', manifest);
         gulp.watch('./src/html/**/*.ascx', html);
+        gulp.watch('./src/container/**/*.ascx', containersHtml);
         gulp.watch('./src/html/menus/**/*', menu);
         gulp.watch('./src/styles/**/*.scss', styles);
         gulp.watch('./src/scripts/*.ts', scripts);
@@ -173,7 +183,7 @@ function watch() {
 
 exports.default = gulp.series(
     clean,
-    gulp.parallel(html, menu, styles, scripts, images, manifest, fonts, doctype),
+    gulp.parallel(html, containersHtml, menu, styles, scripts, images, manifest, fonts, doctype),
     packageModule
     );
 exports.watch = watch;
