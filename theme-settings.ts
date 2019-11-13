@@ -5,7 +5,7 @@ export class ThemeSettings {
 
     /********************************************************************/
     /*                                                                  */
-    /*   DO NOT PUT YOUR SETTING HERE, SCROLL DOWN TO THE CONSTRUCTOR   */
+    /*   DO NOT PUT YOUR SETTINGS HERE, SCROLL DOWN TO THE CONSTRUCTOR   */
     /*                                                                  */
     /********************************************************************/
 
@@ -20,6 +20,8 @@ export class ThemeSettings {
     skinpath:string;
     containersPath:string;
     zipfileName:string;
+    useBootstrap:boolean;
+    useFontAwesome:boolean;
 
     
     constructor() {
@@ -56,5 +58,8 @@ export class ThemeSettings {
         this.containersPath = `Portals\\_default\\Containers\\${this.packageName}\\`;
         this.zipfileName = `${this.packageName}_${this.version}_install.zip`;
 
+        // This makes build decisions depending on bootstrap and fontawesome preferences.
+        this.useBootstrap = true;
+        this.useFontAwesome = false;
     }
 }

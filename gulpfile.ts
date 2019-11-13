@@ -1,13 +1,20 @@
 import { ThemeSettings } from './theme-settings';
 import * as gulp from 'gulp';
-import del from 'del';
 import * as debug from 'gulp-debug';
 import * as sourcemaps from 'gulp-sourcemaps';
 import * as cleanCSS from 'gulp-clean-css';
 import * as ts from 'gulp-typescript';
 import * as concat from 'gulp-concat';
 import * as uglify from 'gulp-uglify';
+import * as prompt from 'inquirer';
+import * as imagemin from 'gulp-imagemin';
+import * as merge from 'merge2';
+import * as zip from 'gulp-zip';
+import * as replace from 'gulp-replace';
+import * as color from 'gulp-color';
+import * as gulpif from 'gulp-if';
 const rename = require('gulp-rename');
+const del = require('del');
 const cheerio = require('gulp-cheerio');
 const sass = require('gulp-sass');
 const browserSync = require('browser-sync').create();
@@ -33,13 +40,25 @@ function clean(){
  * @param cb 
  */
 function styles(){
-    return gulp.src('./src/styles/main.scss')
+    
+    // setup required files according to options
+    let files = [];
+    files.push('./src/styles/main.scss');
+    if (themeSettings.useBootstrap){
+        files.push('./src/styles/bootstrap/bootstrap.scss');
+    }
+    if (themeSettings.useFontAwesome){
+        files.push('./src/styles/fontawesome/fontawesome.scss');
+    }
+
+    return gulp.src(files)
+    .pipe(debug({title: 'styles:'}))
     .pipe(sourcemaps.init())
     .pipe(sass({
-            outputStyle: 'compressed'
-        }).on('error', sass.logError))
+        outputStyle: 'compressed'
+    }).on('error', sass.logError))
+    .pipe(concat('theme.min.css'))
     .pipe(cleanCSS({level: 2}))
-    .pipe(rename('theme.min.css'))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/css`))
 }
@@ -49,7 +68,15 @@ function styles(){
  * @param cb 
  */
 function scripts(){
-    return gulp.src(['./node_modules/bootstrap/dist/js/bootstrap.bundle.js','./src/**/*.ts'])
+
+    let files = [];
+    if (themeSettings.useBootstrap){
+        files.push('./node_modules/bootstrap/dist/js/bootstrap.bundle.js');
+        files.push('./src/scripts/bootstrap/bootstrap.ts');
+    }
+    files.push('./src/scripts/main.ts');
+
+    return gulp.src(files)
     .pipe(sourcemaps.init())
     .pipe(ts({
         module: "commonjs", 
@@ -66,10 +93,11 @@ function scripts(){
 
 /**
  * Optimizes images
- * @param cb 
  */
-function images(cb){
-    cb();
+function images(){
+    return gulp.src('./src/images/*')
+    .pipe(imagemin())
+    .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/Images/`));
 }
 
 /**
@@ -81,6 +109,7 @@ function manifest() {
         cheerio( 
             {
                 run: function ($, file, done) {
+                    // Cedit package info
                     const pack = $('packages package');
                     pack.attr('name', themeSettings.packageName);
                     pack.attr('version', themeSettings.version);
@@ -117,8 +146,30 @@ function manifest() {
  * Packages the theme for distribution
  * @param cb
  */
-function packageModule(cb){
-    cb();
+function packageTheme(){
+    return merge(
+        packageSkin(),
+        packageContainers(),
+        gulp.src(
+            [
+                `../Skins/${themeSettings.packageName}/manifest.dnn`,
+                './releaseNotes.txt',
+                'LICENSE'
+            ]
+        )
+    )
+    .pipe(zip(themeSettings.zipfileName))
+    .pipe(gulp.dest('./install'));
+}
+
+function packageSkin() {
+    return gulp.src(`../Skins/${themeSettings.packageName}/**/*`)
+    .pipe(zip('./skinResources.zip'));
+}
+
+function packageContainers() {
+    return gulp.src(`../Containers/${themeSettings.packageName}/**/*`)
+    .pipe(zip('./containersResources.zip'));
 }
 
 /**
@@ -129,6 +180,14 @@ function html(){
     .pipe(gulp.dest(`../Skins/${themeSettings.packageName}`, {overwrite: true}));
 }
 
+/**
+ * Copies containers html templates (ascx)
+ */
+function containersHtml(){
+    return gulp.src('src/containers/**/*.ascx')
+    .pipe(gulp.dest(`../Containers/${themeSettings.packageName}`, {overwrite: true}));
+}
+
 function menu(){
     return gulp.src('src/html/menus/**/*')
     .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/menus`, {overwrite: true}));
@@ -136,7 +195,9 @@ function menu(){
 
 function fonts(){
     return gulp.src('node_modules/@fortawesome/fontawesome-free/webfonts/*')
-    .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/webfonts`));
+    .pipe(gulpif(themeSettings.useFontAwesome, 
+        gulp.dest(`../Skins/${themeSettings.packageName}/webfonts`)
+    ));
 }
 
 function doctype(){
@@ -145,22 +206,123 @@ function doctype(){
 }
 
 function watch() {
-    browserSync.init({
-        proxy: "http://dnn932clean.localtest.me/"
+    const questions = [
+        {
+            type: 'input',
+            name: 'url',
+            question: 'What is the url of your dev site?',
+            default: 'http://dnndev.localtest.me'
+        }
+    ];
+
+    return prompt.prompt(questions).then(answer => {
+        browserSync.init({
+            proxy: answer.url
+        });
+        gulp.watch('./theme-settings.ts', manifest);
+        gulp.watch('./src/html/**/*.ascx', html);
+        gulp.watch('./src/container/**/*.ascx', containersHtml);
+        gulp.watch('./src/html/menus/**/*', menu);
+        gulp.watch('./src/styles/**/*.scss', styles);
+        gulp.watch('./src/scripts/*.ts', scripts);
+        gulp.watch('./src/images/**/*', images);
+        gulp.watch('./**/*').on("change", browserSync.reload);
     });
-    gulp.watch('./theme-settings.ts', manifest);
-    gulp.watch('./src/html/**/*.ascx', html);
-    gulp.watch('./src/html/menus/**/*', menu);
-    gulp.watch('./src/styles/**/*.scss', styles);
-    gulp.watch('./src/scripts/*.ts', scripts);
-    gulp.watch('./**/*').on("change", browserSync.reload);
+}
+
+function config() {
+    const questions = [
+        {
+            type: 'input',
+            name: 'version',
+            message: 'What version do you want to give to your theme?',
+            default: themeSettings.version
+        },
+        {
+            type: 'input',
+            name: 'packageName',
+            message: 'What package name would you like to use (should be unique and no special characters)?',
+            default: themeSettings.packageName
+        },
+        {
+            type: 'input',
+            name: 'friendlyName',
+            message: 'What friendly name would you like (shown to users)?',
+            default: themeSettings.friendlyName
+        },
+        {
+            type: 'input',
+            name: 'ownerName',
+            message: 'What is your name?',
+            default: themeSettings.ownerName
+        },
+        {
+            type: 'input',
+            name: 'ownerOrganization',
+            message: 'What is your organization name',
+            default: themeSettings.ownerOrganization
+        },
+        {
+            type: 'input',
+            name: 'ownerUrl',
+            message: 'Which website can people visit for information about this theme?',
+            default: themeSettings.ownerUrl
+        },
+        {
+            type: 'input',
+            name: 'ownerEmail',
+            message: 'What is the email people can contact you about this theme?',
+            default: themeSettings.ownerEmail
+        },
+        {
+            type: 'checkbox',
+            name: 'options',
+            message: 'What would you like to include in this theme?',
+            choices: [
+                {
+                    name: 'bootstrap 4',
+                    value: 'bs4',
+                    checked: themeSettings.useBootstrap
+                },
+                {
+                    name: 'fontawesome 5',
+                    value: 'fa5',
+                    checked: themeSettings.useFontAwesome
+                }
+            ]
+        }
+    ];
+
+    return prompt.prompt(questions).then(answers => {
+        gulp.src('theme-settings.ts')
+        .pipe(replace(/this\.version = "(.*)";/, `this.version = "${answers.version}";`))
+        .pipe(replace(/this\.packageName = "(.*)";/, `this.packageName = "${answers.packageName}";`))
+        .pipe(replace(/this\.friendlyName = "(.*)";/, `this.friendlyName = "${answers.friendlyName}";`))
+        .pipe(replace(/this\.ownerName = "(.*)";/, `this.ownerName = "${answers.ownerName}";`))
+        .pipe(replace(/this\.ownerOrganization = "(.*)";/, `this.ownerOrganization = "${answers.ownerOrganization}";`))
+        .pipe(replace(/this\.ownerUrl = "(.*)";/, `this.ownerUrl = "${answers.ownerUrl}";`))
+        .pipe(replace(/this\.onwerEmail = "(.*)";/, `this.ownerEmail = "${answers.ownerEmail}";`))
+        .pipe(gulpif(answers.options.includes("bs4"), 
+            replace(/this\.useBootstrap = (.*);/, `this.useBootstrap = true;`),
+            replace(/this\.useBootstrap = (.*);/, `this.useBootstrap = false;`)
+        ))
+        .pipe(gulpif(answers.options.includes("fa5"),
+            replace(/this\.useFontAwesome = (.*);/, `this.useFontAwesome = true;`),
+            replace(/this\.useFontAwesome = (.*);/, `this.useFontAwesome = false;`)
+        ))
+        .pipe(gulp.dest('./'))
+        .on('end', () =>{
+            console.log(color('You are all set !', 'GREEN'));
+            console.log(color('Further customizations can be done in the theme-settings.ts file.', 'CYAN'));
+        });
+    });
 }
 
 exports.default = gulp.series(
     clean,
-    gulp.parallel(html, menu, styles, scripts, images, manifest, fonts, doctype),
-    packageModule
+    gulp.parallel(html, containersHtml, menu, styles, scripts, images, manifest, fonts, doctype),
+    packageTheme
     );
 exports.watch = watch;
 exports.cleanup = clean;
-exports.styles = styles;
+exports.config = config;
