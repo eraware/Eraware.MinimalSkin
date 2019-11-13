@@ -12,6 +12,7 @@ import * as imagemin from 'gulp-imagemin';
 import * as merge from 'merge2';
 import * as zip from 'gulp-zip';
 import * as replace from 'gulp-replace';
+import * as color from 'gulp-color';
 const rename = require('gulp-rename');
 const cheerio = require('gulp-cheerio');
 const sass = require('gulp-sass');
@@ -227,12 +228,6 @@ function config() {
             default: themeSettings.friendlyName
         },
         {
-            type: 'editor',
-            name: 'description',
-            message: 'Customize the package description',
-            default: themeSettings.description
-        },
-        {
             type: 'input',
             name: 'ownerName',
             message: 'What is your name?',
@@ -277,7 +272,17 @@ function config() {
         console.log(answers);
         gulp.src('theme-settings.ts')
         .pipe(replace(/this\.version = "(.*)";/, `this.version = "${answers.version}";`))
-        .pipe(gulp.dest('./'));
+        .pipe(replace(/this\.packageName = "(.*)";/, `this.packageName = "${answers.packageName}";`))
+        .pipe(replace(/this\.friendlyName = "(.*)";/, `this.friendlyName = "${answers.friendlyName}";`))
+        .pipe(replace(/this\.ownerName = "(.*)";/, `this.ownerName = "${answers.ownerName}";`))
+        .pipe(replace(/this\.ownerOrganization = "(.*)";/, `this.ownerOrganization = "${answers.ownerOrganization}";`))
+        .pipe(replace(/this\.ownerUrl = "(.*)";/, `this.ownerUrl = "${answers.ownerUrl}";`))
+        .pipe(replace(/this\.onwerEmail = "(.*)";/, `this.ownerEmail = "${answers.ownerEmail}";`))
+        .pipe(gulp.dest('./'))
+        .on('end', () =>{
+            console.log(color('You are all set !', 'GREEN'));
+            console.log(color('Further customizations can be done in the theme-settings.ts file.', 'CYAN'));
+        });
     });
 }
 
