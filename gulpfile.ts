@@ -9,6 +9,8 @@ import * as concat from 'gulp-concat';
 import * as uglify from 'gulp-uglify';
 import * as prompt from 'inquirer';
 import * as imagemin from 'gulp-imagemin';
+import * as merge from 'merge2';
+import * as zip from 'gulp-zip';
 const rename = require('gulp-rename');
 const cheerio = require('gulp-cheerio');
 const sass = require('gulp-sass');
@@ -121,8 +123,30 @@ function manifest() {
  * Packages the theme for distribution
  * @param cb
  */
-function packageModule(cb){
-    cb();
+function packageTheme(){
+    return merge(
+        packageSkin(),
+        packageContainers(),
+        gulp.src(
+            [
+                `../Skins/${themeSettings.packageName}/manifest.dnn`,
+                './releaseNotes.txt',
+                'LICENSE'
+            ]
+        )
+    )
+    .pipe(zip(themeSettings.zipfileName))
+    .pipe(gulp.dest('./install'));
+}
+
+function packageSkin() {
+    return gulp.src(`../Skins/${themeSettings.packageName}/**/*`)
+    .pipe(zip('./skinResources.zip'));
+}
+
+function packageContainers() {
+    return gulp.src(`../Containers/${themeSettings.packageName}/**/*`)
+    .pipe(zip('./containersResources.zip'));
 }
 
 /**
@@ -184,7 +208,7 @@ function watch() {
 exports.default = gulp.series(
     clean,
     gulp.parallel(html, containersHtml, menu, styles, scripts, images, manifest, fonts, doctype),
-    packageModule
+    packageTheme
     );
 exports.watch = watch;
 exports.cleanup = clean;
