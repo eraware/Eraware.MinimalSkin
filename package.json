@@ -39,7 +39,7 @@
     "inquirer": "^7.0.0",
     "popper.js": "^1.15.0",
     "ts-node": "^8.1.0",
-    "typescript": "^3.4.5"
+    "typescript": "^3.7.2"
   },
   "dependencies": {
     "@types/gulp-debug": "^2.0.31",
