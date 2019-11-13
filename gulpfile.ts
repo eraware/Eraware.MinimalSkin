@@ -13,6 +13,7 @@ import * as merge from 'merge2';
 import * as zip from 'gulp-zip';
 import * as replace from 'gulp-replace';
 import * as color from 'gulp-color';
+import * as gulpif from 'gulp-if';
 const rename = require('gulp-rename');
 const cheerio = require('gulp-cheerio');
 const sass = require('gulp-sass');
@@ -39,13 +40,22 @@ function clean(){
  * @param cb 
  */
 function styles(){
-    return gulp.src('./src/styles/main.scss')
+    
+    // setup required files according to options
+    let files = [];
+    files.push('./src/styles/main.scss')
+    if (themeSettings.useBootstrap){
+        files.push('./src/styles/bootstrap/bootstrap.scss')
+    }
+
+    return gulp.src(files)
+    .pipe(debug({title: 'styles:'}))
     .pipe(sourcemaps.init())
     .pipe(sass({
-            outputStyle: 'compressed'
-        }).on('error', sass.logError))
+        outputStyle: 'compressed'
+    }).on('error', sass.logError))
+    .pipe(concat('theme.min.css'))
     .pipe(cleanCSS({level: 2}))
-    .pipe(rename('theme.min.css'))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/css`))
 }
@@ -55,7 +65,15 @@ function styles(){
  * @param cb 
  */
 function scripts(){
-    return gulp.src(['./node_modules/bootstrap/dist/js/bootstrap.bundle.js','./src/**/*.ts'])
+
+    let files = [];
+    if (themeSettings.useBootstrap){
+        files.push('./node_modules/bootstrap/dist/js/bootstrap.bundle.js');
+        files.push('./src/scripts/bootstrap/bootstrap.ts');
+    }
+    files.push('./src/scripts/main.ts');
+
+    return gulp.src(files)
     .pipe(sourcemaps.init())
     .pipe(ts({
         module: "commonjs", 
@@ -258,18 +276,19 @@ function config() {
             choices: [
                 {
                     name: 'bootstrap 4',
-                    value: 'bs4'
+                    value: 'bs4',
+                    checked: themeSettings.useBootstrap
                 },
                 {
                     name: 'fontawesome 5',
-                    value: 'fa5'
+                    value: 'fa5',
+                    checked: themeSettings.useFontAwesome
                 }
             ]
         }
     ];
 
     return prompt.prompt(questions).then(answers => {
-        console.log(answers);
         gulp.src('theme-settings.ts')
         .pipe(replace(/this\.version = "(.*)";/, `this.version = "${answers.version}";`))
         .pipe(replace(/this\.packageName = "(.*)";/, `this.packageName = "${answers.packageName}";`))
@@ -278,6 +297,14 @@ function config() {
         .pipe(replace(/this\.ownerOrganization = "(.*)";/, `this.ownerOrganization = "${answers.ownerOrganization}";`))
         .pipe(replace(/this\.ownerUrl = "(.*)";/, `this.ownerUrl = "${answers.ownerUrl}";`))
         .pipe(replace(/this\.onwerEmail = "(.*)";/, `this.ownerEmail = "${answers.ownerEmail}";`))
+        .pipe(gulpif(answers.options.includes("bs4"), 
+            replace(/this\.useBootstrap = (.*);/, `this.useBootstrap = true;`),
+            replace(/this\.useBootstrap = (.*);/, `this.useBootstrap = false;`)
+        ))
+        .pipe(gulpif(answers.options.includes("fa5"),
+            replace(/this\.useFontAwesome = (.*);/, `this.useFontAwesome = true;`),
+            replace(/this\.useFontAwesome = (.*);/, `this.useFontAwesome = false;`)
+        ))
         .pipe(gulp.dest('./'))
         .on('end', () =>{
             console.log(color('You are all set !', 'GREEN'));
