@@ -43,9 +43,12 @@ function styles(){
     
     // setup required files according to options
     let files = [];
-    files.push('./src/styles/main.scss')
+    files.push('./src/styles/main.scss');
     if (themeSettings.useBootstrap){
-        files.push('./src/styles/bootstrap/bootstrap.scss')
+        files.push('./src/styles/bootstrap/bootstrap.scss');
+    }
+    if (themeSettings.useFontAwesome){
+        files.push('./src/styles/fontawesome/fontawesome.scss');
     }
 
     return gulp.src(files)
@@ -192,7 +195,9 @@ function menu(){
 
 function fonts(){
     return gulp.src('node_modules/@fortawesome/fontawesome-free/webfonts/*')
-    .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/webfonts`));
+    .pipe(gulpif(themeSettings.useFontAwesome, 
+        gulp.dest(`../Skins/${themeSettings.packageName}/webfonts`)
+    ));
 }
 
 function doctype(){
