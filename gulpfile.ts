@@ -7,6 +7,7 @@ import * as cleanCSS from 'gulp-clean-css';
 import * as ts from 'gulp-typescript';
 import * as concat from 'gulp-concat';
 import * as uglify from 'gulp-uglify';
+import * as prompt from 'inquirer';
 const rename = require('gulp-rename');
 const cheerio = require('gulp-cheerio');
 const sass = require('gulp-sass');
@@ -145,15 +146,26 @@ function doctype(){
 }
 
 function watch() {
-    browserSync.init({
-        proxy: "http://dnn932clean.localtest.me/"
+    const questions = [
+        {
+            type: 'input',
+            name: 'url',
+            question: 'What is the url of your dev site?',
+            default: 'http://dnndev.localtest.me'
+        }
+    ];
+
+    return prompt.prompt(questions).then(answer => {
+        browserSync.init({
+            proxy: answer.url
+        });
+        gulp.watch('./theme-settings.ts', manifest);
+        gulp.watch('./src/html/**/*.ascx', html);
+        gulp.watch('./src/html/menus/**/*', menu);
+        gulp.watch('./src/styles/**/*.scss', styles);
+        gulp.watch('./src/scripts/*.ts', scripts);
+        gulp.watch('./**/*').on("change", browserSync.reload);
     });
-    gulp.watch('./theme-settings.ts', manifest);
-    gulp.watch('./src/html/**/*.ascx', html);
-    gulp.watch('./src/html/menus/**/*', menu);
-    gulp.watch('./src/styles/**/*.scss', styles);
-    gulp.watch('./src/scripts/*.ts', scripts);
-    gulp.watch('./**/*').on("change", browserSync.reload);
 }
 
 exports.default = gulp.series(
