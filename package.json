@@ -10,7 +10,7 @@
   "scripts": {
     "package": "gulp",
     "watch": "gulp watch",
-    "postinstall": "gulp config && gulp"
+    "config": "gulp config && gulp"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",
