@@ -8,6 +8,7 @@ import * as ts from 'gulp-typescript';
 import * as concat from 'gulp-concat';
 import * as uglify from 'gulp-uglify';
 import * as prompt from 'inquirer';
+import * as imagemin from 'gulp-imagemin';
 const rename = require('gulp-rename');
 const cheerio = require('gulp-cheerio');
 const sass = require('gulp-sass');
@@ -67,10 +68,11 @@ function scripts(){
 
 /**
  * Optimizes images
- * @param cb 
  */
-function images(cb){
-    cb();
+function images(){
+    return gulp.src('./src/images/*')
+    .pipe(imagemin())
+    .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/Images/`));
 }
 
 /**
@@ -164,6 +166,7 @@ function watch() {
         gulp.watch('./src/html/menus/**/*', menu);
         gulp.watch('./src/styles/**/*.scss', styles);
         gulp.watch('./src/scripts/*.ts', scripts);
+        gulp.watch('./src/images/**/*', images);
         gulp.watch('./**/*').on("change", browserSync.reload);
     });
 }
@@ -175,4 +178,3 @@ exports.default = gulp.series(
     );
 exports.watch = watch;
 exports.cleanup = clean;
-exports.styles = styles;
