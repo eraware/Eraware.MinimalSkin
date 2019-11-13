@@ -11,6 +11,8 @@ import * as prompt from 'inquirer';
 import * as imagemin from 'gulp-imagemin';
 import * as merge from 'merge2';
 import * as zip from 'gulp-zip';
+import * as replace from 'gulp-replace';
+import * as color from 'gulp-color';
 const rename = require('gulp-rename');
 const cheerio = require('gulp-cheerio');
 const sass = require('gulp-sass');
@@ -205,6 +207,85 @@ function watch() {
     });
 }
 
+function config() {
+    const questions = [
+        {
+            type: 'input',
+            name: 'version',
+            message: 'What version do you want to give to your theme?',
+            default: themeSettings.version
+        },
+        {
+            type: 'input',
+            name: 'packageName',
+            message: 'What package name would you like to use (should be unique and no special characters)?',
+            default: themeSettings.packageName
+        },
+        {
+            type: 'input',
+            name: 'friendlyName',
+            message: 'What friendly name would you like (shown to users)?',
+            default: themeSettings.friendlyName
+        },
+        {
+            type: 'input',
+            name: 'ownerName',
+            message: 'What is your name?',
+            default: themeSettings.ownerName
+        },
+        {
+            type: 'input',
+            name: 'ownerOrganization',
+            message: 'What is your organization name',
+            default: themeSettings.ownerOrganization
+        },
+        {
+            type: 'input',
+            name: 'ownerUrl',
+            message: 'Which website can people visit for information about this theme?',
+            default: themeSettings.ownerUrl
+        },
+        {
+            type: 'input',
+            name: 'ownerEmail',
+            message: 'What is the email people can contact you about this theme?',
+            default: themeSettings.ownerEmail
+        },
+        {
+            type: 'checkbox',
+            name: 'options',
+            message: 'What would you like to include in this theme?',
+            choices: [
+                {
+                    name: 'bootstrap 4',
+                    value: 'bs4'
+                },
+                {
+                    name: 'fontawesome 5',
+                    value: 'fa5'
+                }
+            ]
+        }
+    ];
+
+    return prompt.prompt(questions).then(answers => {
+        console.log(answers);
+        gulp.src('theme-settings.ts')
+        .pipe(replace(/this\.version = "(.*)";/, `this.version = "${answers.version}";`))
+        .pipe(replace(/this\.packageName = "(.*)";/, `this.packageName = "${answers.packageName}";`))
+        .pipe(replace(/this\.friendlyName = "(.*)";/, `this.friendlyName = "${answers.friendlyName}";`))
+        .pipe(replace(/this\.ownerName = "(.*)";/, `this.ownerName = "${answers.ownerName}";`))
+        .pipe(replace(/this\.ownerOrganization = "(.*)";/, `this.ownerOrganization = "${answers.ownerOrganization}";`))
+        .pipe(replace(/this\.ownerUrl = "(.*)";/, `this.ownerUrl = "${answers.ownerUrl}";`))
+        .pipe(replace(/this\.onwerEmail = "(.*)";/, `this.ownerEmail = "${answers.ownerEmail}";`))
+        .pipe(gulp.dest('./'))
+        .on('end', () =>{
+            console.log(color('You are all set !', 'GREEN'));
+            console.log(color('Further customizations can be done in the theme-settings.ts file.', 'CYAN'));
+        });
+    });
+}
+
 exports.default = gulp.series(
     clean,
     gulp.parallel(html, containersHtml, menu, styles, scripts, images, manifest, fonts, doctype),
@@ -212,3 +293,4 @@ exports.default = gulp.series(
     );
 exports.watch = watch;
 exports.cleanup = clean;
+exports.config = config;

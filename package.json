@@ -9,7 +9,8 @@
   "private": false,
   "scripts": {
     "package": "gulp",
-    "watch": "gulp watch"
+    "watch": "gulp watch",
+    "config": "gulp config && gulp"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",
@@ -29,10 +30,12 @@
     "gulp-cheerio": "^0.6.3",
     "gulp-clean-css": "^4.2.0",
     "gulp-cli": "^2.2.0",
+    "gulp-color": "^0.0.2",
     "gulp-concat": "^2.6.1",
     "gulp-debug": "^4.0.0",
     "gulp-imagemin": "^6.2.0",
     "gulp-rename": "^1.4.0",
+    "gulp-replace": "^1.0.0",
     "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-typescript": "^5.0.1",
