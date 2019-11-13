@@ -1,6 +1,5 @@
 import { ThemeSettings } from './theme-settings';
 import * as gulp from 'gulp';
-import del from 'del';
 import * as debug from 'gulp-debug';
 import * as sourcemaps from 'gulp-sourcemaps';
 import * as cleanCSS from 'gulp-clean-css';
@@ -15,6 +14,7 @@ import * as replace from 'gulp-replace';
 import * as color from 'gulp-color';
 import * as gulpif from 'gulp-if';
 const rename = require('gulp-rename');
+const del = require('del');
 const cheerio = require('gulp-cheerio');
 const sass = require('gulp-sass');
 const browserSync = require('browser-sync').create();
