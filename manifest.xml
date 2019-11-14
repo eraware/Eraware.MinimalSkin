@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- WARNING: DO NOT FILL IN THE x-x-x NODES, ENTER YOUR DETAILS IN THE settings.ts file INSTEAD AND GULP WILL FILL THEM HERE -->
 <dotnetnuke type="Package" version="9.0">
     <packages>
         <package name="x-x-x" type="Skin" version="x-x-x">
