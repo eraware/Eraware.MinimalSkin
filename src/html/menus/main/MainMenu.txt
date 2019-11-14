@@ -4,7 +4,7 @@
 
 [>NODE-TOP]
 <li class="nav-item[?SELECTED] active[/?][?NODE] dropdown[/?]">
-   <a class="nav-link[?NODE] dropdown-toggle[/?]" href="[?NODE]#[?ELSE][=URL][/?]" id="navpage[=ID]"[?NODE] role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"[/?]>[=TEXT]</a>
+   <a class="nav-link[?NODE] dropdown-toggle[/?]" href="[?NODE]#[?ELSE][=URL][/?]" target="[=TARGET]" id="navpage[=ID]"[?NODE] role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"[/?]>[=TEXT]</a>
    [?NODE]
         <div class="dropdown-menu" aria-labelledby="navpage[=ID]">
             [*>NODE]
@@ -14,7 +14,7 @@
 [/>]
 
 [>NODE]
-    <a class="dropdown-item" href="[=URL]">[=TEXT]</a>
+    <a class="dropdown-item" href="[=URL]" target="[=TARGET]">[=TEXT]</a>
 [/>]
 
 
