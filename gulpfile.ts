@@ -18,14 +18,17 @@ const del = require('del');
 const cheerio = require('gulp-cheerio');
 const sass = require('gulp-sass');
 const browserSync = require('browser-sync').create();
+const gitVersion = require('git-tag-version');
 
 const themeSettings = new ThemeSettings();
+var semVer = {
+    fullSemVer: "",
+    major: 0,
+    minor: 0,
+    patch: 0,
+    majorMinorPatch: ""
+};
 
-/**
- * Cleans the generated files
- * @param cb {any} any
- * 
- */
 function clean(){
     return del([
         `../Skins/${themeSettings.packageName}/**/*`,
@@ -35,10 +38,18 @@ function clean(){
     });
 }
 
-/**
- * Transpile, minify and combine script
- * @param cb 
- */
+function version(cb){
+    semVer.fullSemVer = gitVersion({
+        uniqueSnapshot: true
+    });
+    semVer.major = Number.parseInt(semVer.fullSemVer.split('.')[0]);
+    semVer.minor = Number.parseInt(semVer.fullSemVer.split('.')[1]);
+    semVer.patch = Number.parseInt(semVer.fullSemVer.split('.')[2]);
+    semVer.majorMinorPatch = `${semVer.major}.${semVer.minor}.${semVer.patch}`;
+    console.log(semVer);
+    cb();
+}
+
 function styles(){
     
     // setup required files according to options
@@ -112,7 +123,7 @@ function manifest() {
                     // Cedit package info
                     const pack = $('packages package');
                     pack.attr('name', themeSettings.packageName);
-                    pack.attr('version', themeSettings.version);
+                    pack.attr('version', semVer.majorMinorPatch);
                     $('friendlyName', pack).text(themeSettings.friendlyName);
                     $('description', pack).text(themeSettings.description);
                     const owner = $('owner', pack);
@@ -158,7 +169,7 @@ function packageTheme(){
             ]
         )
     )
-    .pipe(zip(themeSettings.zipfileName))
+    .pipe(zip(`${themeSettings.packageName}_${semVer.fullSemVer}_install.zip`))
     .pipe(gulp.dest('./install'));
 }
 
@@ -211,13 +222,18 @@ function watch() {
             type: 'input',
             name: 'url',
             question: 'What is the url of your dev site?',
-            default: 'http://dnndev.localtest.me'
+            default: themeSettings.testSiteUrl
         }
     ];
 
     return prompt.prompt(questions).then(answer => {
+        gulp.src('theme-settings.ts')
+        .pipe(replace(/this\.testSiteUrl = "(.*)";/, `this.testSiteUrl = "${answer.url}";`))
+        .pipe(gulp.dest('./'));
+
         browserSync.init({
-            proxy: answer.url
+            proxy: answer.url,
+            reloadDelay: 1000
         });
         gulp.watch('./theme-settings.ts', manifest);
         gulp.watch('./src/html/**/*.ascx', html);
@@ -232,12 +248,6 @@ function watch() {
 
 function config() {
     const questions = [
-        {
-            type: 'input',
-            name: 'version',
-            message: 'What version do you want to give to your theme?',
-            default: themeSettings.version
-        },
         {
             type: 'input',
             name: 'packageName',
@@ -295,7 +305,6 @@ function config() {
 
     return prompt.prompt(questions).then(answers => {
         gulp.src('theme-settings.ts')
-        .pipe(replace(/this\.version = "(.*)";/, `this.version = "${answers.version}";`))
         .pipe(replace(/this\.packageName = "(.*)";/, `this.packageName = "${answers.packageName}";`))
         .pipe(replace(/this\.friendlyName = "(.*)";/, `this.friendlyName = "${answers.friendlyName}";`))
         .pipe(replace(/this\.ownerName = "(.*)";/, `this.ownerName = "${answers.ownerName}";`))
@@ -320,6 +329,7 @@ function config() {
 
 exports.default = gulp.series(
     clean,
+    version,
     gulp.parallel(html, containersHtml, menu, styles, scripts, images, manifest, fonts, doctype),
     packageTheme
     );
