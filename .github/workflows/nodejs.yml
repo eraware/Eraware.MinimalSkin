@@ -20,4 +20,4 @@ jobs:
     - name: action-yarn
       uses: comchangs/action-yarn@v0.1-beta
       with:
-        args: "yarn install; yarn build"
+        args: "yarn install; yarn run build"
