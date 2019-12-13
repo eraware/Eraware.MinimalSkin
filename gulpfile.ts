@@ -217,7 +217,8 @@ function watch() {
 
     return prompt.prompt(questions).then(answer => {
         browserSync.init({
-            proxy: answer.url
+            proxy: answer.url,
+            reloadDelay: 1000
         });
         gulp.watch('./theme-settings.ts', manifest);
         gulp.watch('./src/html/**/*.ascx', html);

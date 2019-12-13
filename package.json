@@ -1,6 +1,6 @@
 {
   "name": "@valadas/eraware-minimalskin",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Minimal Dnn Skin",
   "main": "index.js",
   "repository": "https://github.com/valadas/Eraware.MinimalSkin",
@@ -8,9 +8,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "package": "gulp",
-    "watch": "gulp watch",
-    "config": "gulp config && gulp"
+    "build": "gulp",
+    "start": "gulp watch",
+    "settings": "gulp config && gulp"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.12.0",
