@@ -25,6 +25,6 @@ jobs:
       uses: actions/upload-artifact@v1.0.0
       with:
         # Artifact name
-        name: "install"
+        name: install
         # Directory containing files to upload
-        path: "Install"
+        path: install
