@@ -20,7 +20,7 @@ export class ThemeSettings {
     containersPath:string;
     useBootstrap:boolean;
     useFontAwesome:boolean;
-
+    testSiteUrl:string;
     
     constructor() {
         // The package name must be unique and be a valid folder name, so avoid spaces and special charaters 
@@ -54,5 +54,8 @@ export class ThemeSettings {
         // This makes build decisions depending on bootstrap and fontawesome preferences.
         this.useBootstrap = true;
         this.useFontAwesome = false;
+
+        // This saves the last used test site url.
+        this.testSiteUrl = "https://dnn.localtest.me";
     }
 }

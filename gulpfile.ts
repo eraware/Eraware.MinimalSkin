@@ -222,11 +222,15 @@ function watch() {
             type: 'input',
             name: 'url',
             question: 'What is the url of your dev site?',
-            default: 'http://dnndev.localtest.me'
+            default: themeSettings.testSiteUrl
         }
     ];
 
     return prompt.prompt(questions).then(answer => {
+        gulp.src('theme-settings.ts')
+        .pipe(replace(/this\.testSiteUrl = "(.*)";/, `this.testSiteUrl = "${answer.url}";`))
+        .pipe(gulp.dest('./'));
+
         browserSync.init({
             proxy: answer.url,
             reloadDelay: 1000
