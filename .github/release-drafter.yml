@@ -1,0 +1,16 @@
+name-template: v$NEXT_PATCH_VERSION
+tag-template: v$NEXT_PATCH_VERSION
+categories:
+  - title: 🚀 Features
+    label: feature
+  - title: 🐛 Bug Fixes
+    label: bug
+  - title: 🧰 Maintenance
+    label: chore
+tag-template: - $TITLE @$AUTHOR (#$NUMBER)
+template: |
+  Thanks to the following contributors
+  $CONTRIBUTORS
+
+  ## Changes
+  $CHANGES
