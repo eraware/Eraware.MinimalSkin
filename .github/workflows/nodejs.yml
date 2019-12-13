@@ -21,3 +21,5 @@ jobs:
       uses: comchangs/action-yarn@v0.1-beta
       with:
         args: "yarn install; yarn run build"
+    - name: Download artifact
+      uses: actions/download-artifact@v1.0.0
