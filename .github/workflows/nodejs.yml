@@ -1,6 +1,13 @@
 name: Node CI
 
-on: [push]
+on:
+  pull_request:
+  push:
+    branches: 
+      - develop
+      - development
+      - master
+      - 'release/**'
 
 jobs:
   build:
@@ -17,11 +24,14 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Yarn install
-      uses: borales/actions-yarn@v2.1.0
+    - name: action-yarn
+      uses: comchangs/action-yarn@v0.1-beta
       with:
-        cmd: install
-    - name: Yarn build
-      uses: borales/actions-yarn@v2.1.0
+        args: "yarn install; yarn run build"
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
       with:
-        cmd: package
+        # Artifact name
+        name: install
+        # Directory containing files to upload
+        path: install
