@@ -23,3 +23,5 @@ jobs:
         args: "yarn install; yarn run build"
     - name: Download artifact
       uses: actions/download-artifact@v1.0.0
+      with:
+        name: "Install"
