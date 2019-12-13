@@ -9,7 +9,6 @@ export class ThemeSettings {
     /*                                                                  */
     /********************************************************************/
 
-    version:string;    
     packageName:string;
     friendlyName:string;
     description:string;
@@ -19,16 +18,11 @@ export class ThemeSettings {
     ownerEmail:string;
     skinpath:string;
     containersPath:string;
-    zipfileName:string;
     useBootstrap:boolean;
     useFontAwesome:boolean;
 
     
     constructor() {
-
-        // The version of the theme, don't forget to bump that version on every new release if you want Dnn to upgrade it
-        this.version = "0.1.0"; 
-
         // The package name must be unique and be a valid folder name, so avoid spaces and special charaters 
         // It is recommended to use your company or own name as a prefix to avoid name claches with other developers
         this.packageName = "eraware.ca.themes.minimal";
@@ -56,7 +50,6 @@ export class ThemeSettings {
         // This section is derived from the previous settings, but feel free to customize if needed
         this.skinpath = `Portals\\_default\\Skins\\${this.packageName}\\`;
         this.containersPath = `Portals\\_default\\Containers\\${this.packageName}\\`;
-        this.zipfileName = `${this.packageName}_${this.version}_install.zip`;
 
         // This makes build decisions depending on bootstrap and fontawesome preferences.
         this.useBootstrap = true;
