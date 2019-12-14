@@ -1,24 +1,29 @@
 import { ThemeSettings } from './theme-settings';
 import * as gulp from 'gulp';
-import * as debug from 'gulp-debug';
-import * as sourcemaps from 'gulp-sourcemaps';
-import * as cleanCSS from 'gulp-clean-css';
-import * as ts from 'gulp-typescript';
-import * as concat from 'gulp-concat';
-import * as uglify from 'gulp-uglify';
-import * as prompt from 'inquirer';
-import * as imagemin from 'gulp-imagemin';
-import * as merge from 'merge2';
-import * as zip from 'gulp-zip';
-import * as replace from 'gulp-replace';
-import * as color from 'gulp-color';
-import * as gulpif from 'gulp-if';
-const rename = require('gulp-rename');
-const del = require('del');
-const cheerio = require('gulp-cheerio');
-const sass = require('gulp-sass');
+const addSrc = require('gulp-add-src');
+const browserify = require('browserify');
 const browserSync = require('browser-sync').create();
+const buffer = require('vinyl-buffer');
+const cheerio = require('gulp-cheerio');
+const cleanCSS = require('gulp-clean-css');
+const color = require('gulp-color');
+const concat = require('gulp-concat');
+const debug = require('gulp-debug');
+const del = require('del');
 const gitVersion = require('git-tag-version');
+const gulpif = require('gulp-if');
+const gulpOrder = require('gulp-order');
+const imagemin = require('gulp-imagemin');
+const merge = require('merge2');
+const prompt = require('inquirer');
+const rename = require('gulp-rename');
+const replace = require('gulp-replace');
+const sass = require('gulp-sass');
+const source = require('vinyl-source-stream');
+const sourcemaps = require('gulp-sourcemaps');
+const tsify = require('tsify');
+const uglify = require('gulp-uglify');
+const zip = require('gulp-zip');
 
 const themeSettings = new ThemeSettings();
 var semVer = {
@@ -38,7 +43,7 @@ function clean(){
     });
 }
 
-function version(cb){
+function version(cb: any){
     semVer.fullSemVer = gitVersion({
         uniqueSnapshot: true
     });
@@ -79,28 +84,35 @@ function styles(){
  * @param cb 
  */
 function scripts(){
-
-    let files = [];
-    if (themeSettings.useBootstrap){
-        files.push('./node_modules/bootstrap/dist/js/bootstrap.bundle.js');
-        files.push('./src/scripts/bootstrap/bootstrap.ts');
-    }
-    files.push('./src/scripts/main.ts');
-
-    return gulp.src(files)
-    .pipe(sourcemaps.init())
-    .pipe(ts({
-        module: "commonjs", 
-        target: "es5", 
-        allowJs: true, 
-        noImplicitAny: true, 
-        moduleResolution: "node"
-    }))
+    return browserify({
+        basedir: '.',
+        debug: true,
+        entries: ['./src/scripts/main.ts'],
+        cache: {},
+        packageCache: {}
+    })
+    .plugin(tsify)
+    .transform('babelify', {
+        presets: ['env'],
+        extensions: ['.ts']
+    })
+    .bundle()
+    .pipe(source('skin.js'))
+    .pipe(buffer())
+    .pipe(gulpif(themeSettings.useBootstrap, addSrc.prepend('./src/scripts/bootstrap/bootstrap.js')))
+    .pipe(gulpif(themeSettings.useBootstrap, addSrc.prepend('./node_modules/bootstrap/dist/js/bootstrap.bundle.js')))
+    .pipe(gulpOrder([
+        "bootstrap.bundle.js",
+        "bootstrap.ts",
+        "skin.js"
+    ]))
     .pipe(concat('skin.min.js'))
+    .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(uglify())
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/js`));
 }
+
 
 /**
  * Optimizes images
@@ -119,7 +131,7 @@ function manifest() {
     .pipe(
         cheerio( 
             {
-                run: function ($, file, done) {
+                run: function ($: any, _file: any, done: any) {
                     // Cedit package info
                     const pack = $('packages package');
                     pack.attr('name', themeSettings.packageName);
@@ -226,21 +238,29 @@ function watch() {
         }
     ];
 
-    return prompt.prompt(questions).then(answer => {
+    return prompt.prompt(questions).then((answer: any) => {
         gulp.src('theme-settings.ts')
         .pipe(replace(/this\.testSiteUrl = "(.*)";/, `this.testSiteUrl = "${answer.url}";`))
         .pipe(gulp.dest('./'));
 
         browserSync.init({
-            proxy: answer.url,
-            reloadDelay: 1000
+            proxy: {
+                target: themeSettings.testSiteUrl,
+                proxyRes: [
+                    function(_proxyRes: any, _req: any, res: any){
+                        res.setHeader('Access-Control-Allow-Origin', '*');
+                    }
+                ]
+            },
+            reloadDelay: 1000,
+            cors: true
         });
         gulp.watch('./theme-settings.ts', manifest);
         gulp.watch('./src/html/**/*.ascx', html);
         gulp.watch('./src/container/**/*.ascx', containersHtml);
         gulp.watch('./src/html/menus/**/*', menu);
         gulp.watch('./src/styles/**/*.scss', styles);
-        gulp.watch('./src/scripts/*.ts', scripts);
+        gulp.watch('./src/scripts/**/*.ts', scripts);
         gulp.watch('./src/images/**/*', images);
         gulp.watch('./**/*').on("change", browserSync.reload);
     });
@@ -303,7 +323,7 @@ function config() {
         }
     ];
 
-    return prompt.prompt(questions).then(answers => {
+    return prompt.prompt(questions).then((answers: any) => {
         gulp.src('theme-settings.ts')
         .pipe(replace(/this\.packageName = "(.*)";/, `this.packageName = "${answers.packageName}";`))
         .pipe(replace(/this\.friendlyName = "(.*)";/, `this.friendlyName = "${answers.friendlyName}";`))
