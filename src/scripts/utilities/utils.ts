@@ -10,14 +10,22 @@ export function replaceClasses(classes: object, warn: boolean = true, message: s
         const el = document.querySelector(getSelectorFromClasses(oldClasses));
         if (el !== null){
             elements.push({ element: el, oldClasses, newClasses})
-            el.classList.remove(oldClasses);
-            el.classList.add(newClasses);
+            var oldClassList = oldClasses.split(' ');
+            oldClassList.forEach((c: string) => {
+                el.classList.remove(c);
+            })
+            var newClassList = newClasses.split(' ');
+            newClassList.forEach((c: string) => {
+                el.classList.add(c);
+            });
         }
     }
     if (warn && elements.length > 0){
         console.groupCollapsed(`Found ${elements.length} ${message}.`);
+        const bold = 'font-weight:bold';
+        const normal = 'font-weight:normal'
         elements.forEach(e => {
-            console.warn(`Please replace ${e.oldClasses} for ${e.newClasses} in element`, e.element);
+            console.warn(`Please replace %c${e.oldClasses} %cfor %c${e.newClasses} %cin element`, bold, normal, bold, normal, e.element);
         });
         console.groupEnd();
     }
