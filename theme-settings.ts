@@ -18,7 +18,7 @@ export class ThemeSettings {
     ownerEmail:string;
     skinpath:string;
     containersPath:string;
-    useBootstrap:boolean;
+    useBootstrap: 'no' | 'grid' | 'all';
     useFontAwesome:boolean;
     testSiteUrl:string;
     
@@ -52,7 +52,7 @@ export class ThemeSettings {
         this.containersPath = `Portals\\_default\\Containers\\${this.packageName}\\`;
 
         // This makes build decisions depending on bootstrap and fontawesome preferences.
-        this.useBootstrap = true;
+        this.useBootstrap = 'all';
         this.useFontAwesome = false;
 
         // This saves the last used test site url.
