@@ -60,7 +60,12 @@ function styles(){
     // setup required files according to options
     let files = [];
     files.push('./src/styles/main.scss');
-    if (themeSettings.useBootstrap){
+    if (themeSettings.useBootstrap == 'grid'){
+        files.push('./node_modules/bootstrap/scss/bootstrap-grid.scss');
+        files.push('./src/styles/bootstrap/bootstrap.scss');
+    }
+    if (themeSettings.useBootstrap == 'all'){
+        files.push('./node_modules/bootstrap/scss/bootstrap.scss');
         files.push('./src/styles/bootstrap/bootstrap.scss');
     }
     if (themeSettings.useFontAwesome){
@@ -99,8 +104,8 @@ function scripts(){
     .bundle()
     .pipe(source('skin.js'))
     .pipe(buffer())
-    .pipe(gulpif(themeSettings.useBootstrap, addSrc.prepend('./src/scripts/bootstrap/bootstrap.js')))
-    .pipe(gulpif(themeSettings.useBootstrap, addSrc.prepend('./node_modules/bootstrap/dist/js/bootstrap.bundle.js')))
+    .pipe(gulpif(themeSettings.useBootstrap === 'all', addSrc.prepend('./src/scripts/bootstrap/bootstrap.js')))
+    .pipe(gulpif(themeSettings.useBootstrap === 'all', addSrc.prepend('./node_modules/bootstrap/dist/js/bootstrap.bundle.js')))
     .pipe(gulpOrder([
         "bootstrap.bundle.js",
         "bootstrap.ts",
@@ -305,17 +310,34 @@ function config() {
             default: themeSettings.ownerEmail
         },
         {
-            type: 'checkbox',
-            name: 'options',
-            message: 'What would you like to include in this theme?',
+            type: 'list',
+            name: 'bootstrap',
+            message: 'Would you like to use bootstrap?',
             choices: [
                 {
-                    name: 'bootstrap 4',
-                    value: 'bs4',
-                    checked: themeSettings.useBootstrap
+                    name: 'no',
+                    value: 'no',
+                    checked: themeSettings.useBootstrap === 'no'
                 },
                 {
-                    name: 'fontawesome 5',
+                    name: 'grid and responsive utilities only (adds 44Kb)',
+                    value: 'grid',
+                    checked: themeSettings.useBootstrap === 'grid'
+                },
+                {
+                    name: 'all of bootstrap (adds 221Kb)',
+                    value: 'all',
+                    checked: themeSettings.useBootstrap === 'all'
+                }
+            ]
+        },
+        {
+            type: 'checkbox',
+            name: 'icons',
+            message: 'Would you like to include an icon font?',
+            choices: [
+                {
+                    name: 'fontawesome 5 (adds 206Kb)',
                     value: 'fa5',
                     checked: themeSettings.useFontAwesome
                 }
@@ -331,11 +353,16 @@ function config() {
         .pipe(replace(/this\.ownerOrganization = "(.*)";/, `this.ownerOrganization = "${answers.ownerOrganization}";`))
         .pipe(replace(/this\.ownerUrl = "(.*)";/, `this.ownerUrl = "${answers.ownerUrl}";`))
         .pipe(replace(/this\.onwerEmail = "(.*)";/, `this.ownerEmail = "${answers.ownerEmail}";`))
-        .pipe(gulpif(answers.options.includes("bs4"), 
-            replace(/this\.useBootstrap = (.*);/, `this.useBootstrap = true;`),
-            replace(/this\.useBootstrap = (.*);/, `this.useBootstrap = false;`)
+        .pipe(gulpif(answers.bootstrap.includes('no'),
+            replace(/this.useBootstrap = (.*);/, `this.useBootstrap = 'no';`)
         ))
-        .pipe(gulpif(answers.options.includes("fa5"),
+        .pipe(gulpif(answers.bootstrap.includes('grid'),
+            replace(/this.useBootstrap = (.*);/, `this.useBootstrap = 'grid';`)
+        ))
+        .pipe(gulpif(answers.bootstrap.includes('all'),
+            replace(/this.useBootstrap = (.*);/, `this.useBootstrap = 'all';`)
+        ))
+        .pipe(gulpif(answers.icons.includes("fa5"),
             replace(/this\.useFontAwesome = (.*);/, `this.useFontAwesome = true;`),
             replace(/this\.useFontAwesome = (.*);/, `this.useFontAwesome = false;`)
         ))
