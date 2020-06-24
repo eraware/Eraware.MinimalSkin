@@ -27,7 +27,7 @@
     "@types/node": "^13.1.2",
     "babel-preset-env": "^1.7.0",
     "babelify": "^10.0.0",
-    "bootstrap": "^4.4.1",
+    "bootstrap": "^4.5.0",
     "browser-sync": "^2.26.7",
     "browserify": "^16.5.0",
     "del": "^5.1.0",
