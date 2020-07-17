@@ -56,7 +56,7 @@
     "popper.js": "^1.16.1",
     "ts-node": "^8.10.2",
     "tsify": "^4.0.2",
-    "typescript": "^3.9.5",
+    "typescript": "^3.9.7",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   },
