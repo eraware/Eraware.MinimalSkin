@@ -36,6 +36,7 @@ var semVer = {
 
 function clean(){
     return del([
+        './install/**/*',
         `../Skins/${themeSettings.packageName}/**/*`,
         `../Containers/${themeSettings.packageName}/**/*`
     ], {
