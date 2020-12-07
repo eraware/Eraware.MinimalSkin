@@ -250,7 +250,7 @@ function watch() {
 
         browserSync.init({
             proxy: {
-                target: themeSettings.testSiteUrl,
+                target: answer.url,
                 proxyRes: [
                     function(_proxyRes: any, _req: any, res: any){
                         res.setHeader('Access-Control-Allow-Origin', '*');
