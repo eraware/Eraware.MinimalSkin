@@ -8060,10 +8060,10 @@ tsconfig@^5.0.3:
     strip-bom "^2.0.0"
     strip-json-comments "^2.0.0"
 
-tsify@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/tsify/-/tsify-4.0.2.tgz#e3b0911ea79da4db1efbd5252226489ba25be0b6"
-  integrity sha512-XZ4jziRS8SBnoSnp1QOtASxjqhvOSfXhO8cD5WPBpXD6UKDCMQ/n7L1cr+Wlb5htIZJuvfhfxely+HODsVRWLA==
+tsify@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/tsify/-/tsify-5.0.2.tgz#ba3c9f8de239e89ba3aab6b83d65b569ef8b68c3"
+  integrity sha512-Pdo3ZO8CAgbQgNcFRBmfbgsPP+4TsD0itbSF5YgTnxKBXfg6WkQ79e4/bqBaq/7cEYa7vIOM1pHxnux8rJJnzg==
   dependencies:
     convert-source-map "^1.1.0"
     fs.realpath "^1.0.0"
