@@ -279,10 +279,10 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/gulp-cheerio@^0.0.32":
-  version "0.0.32"
-  resolved "https://registry.yarnpkg.com/@types/gulp-cheerio/-/gulp-cheerio-0.0.32.tgz#0acb543da6502412165fbeeb5eb3b1e6a269350f"
-  integrity sha512-LBnsyTnjd7mDi5K20nm0cgRSlWtHKaA4UFl0dXnWDr8HjlbHAl7PiD/nqlv9VTG1JKe1r7G/9HdZF41HVu5CfQ==
+"@types/gulp-cheerio@^0.0.33":
+  version "0.0.33"
+  resolved "https://registry.yarnpkg.com/@types/gulp-cheerio/-/gulp-cheerio-0.0.33.tgz#61f40f028699eaa8329a5d20c40045fce6789738"
+  integrity sha512-wGqAbJzXRBtADKMuyDtLnO3J4NRC4taqHDXuGVQBnpUuiqM9dHJHB+c/HH49StcDFRM7qJ7mXOimG+xRQBG/hw==
   dependencies:
     "@types/cheerio" "*"
     "@types/node" "*"
