@@ -56,6 +56,6 @@ export class ThemeSettings {
         this.useFontAwesome = false;
 
         // This saves the last used test site url.
-        this.testSiteUrl = "https://dnn.localtest.me";
+        this.testSiteUrl = "http://dnn.localtest.me";
     }
 }

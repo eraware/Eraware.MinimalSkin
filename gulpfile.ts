@@ -36,6 +36,7 @@ var semVer = {
 
 function clean(){
     return del([
+        './install/**/*',
         `../Skins/${themeSettings.packageName}/**/*`,
         `../Containers/${themeSettings.packageName}/**/*`
     ], {
@@ -250,7 +251,7 @@ function watch() {
 
         browserSync.init({
             proxy: {
-                target: themeSettings.testSiteUrl,
+                target: answer.url,
                 proxyRes: [
                     function(_proxyRes: any, _req: any, res: any){
                         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -352,7 +353,7 @@ function config() {
         .pipe(replace(/this\.ownerName = "(.*)";/, `this.ownerName = "${answers.ownerName}";`))
         .pipe(replace(/this\.ownerOrganization = "(.*)";/, `this.ownerOrganization = "${answers.ownerOrganization}";`))
         .pipe(replace(/this\.ownerUrl = "(.*)";/, `this.ownerUrl = "${answers.ownerUrl}";`))
-        .pipe(replace(/this\.onwerEmail = "(.*)";/, `this.ownerEmail = "${answers.ownerEmail}";`))
+        .pipe(replace(/this\.ownerEmail = "(.*)";/, `this.ownerEmail = "${answers.ownerEmail}";`))
         .pipe(gulpif(answers.bootstrap.includes('no'),
             replace(/this.useBootstrap = (.*);/, `this.useBootstrap = 'no';`)
         ))
