@@ -51,7 +51,7 @@
     "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.2",
     "gulp-zip": "^5.0.2",
-    "inquirer": "^7.2.0",
+    "inquirer": "^7.3.3",
     "merge2": "^1.4.1",
     "popper.js": "^1.16.1",
     "ts-node": "^8.10.2",
