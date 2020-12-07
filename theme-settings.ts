@@ -53,9 +53,9 @@ export class ThemeSettings {
 
         // This makes build decisions depending on bootstrap and fontawesome preferences.
         this.useBootstrap = 'all';
-        this.useFontAwesome = false;
+        this.useFontAwesome = true;
 
         // This saves the last used test site url.
-        this.testSiteUrl = "https://dnn.localtest.me";
+        this.testSiteUrl = "http://980.localtest.me";
     }
 }
