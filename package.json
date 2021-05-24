@@ -54,7 +54,7 @@
     "inquirer": "^8.1.0",
     "merge2": "^1.4.1",
     "popper.js": "^1.16.1",
-    "ts-node": "^9.1.1",
+    "ts-node": "^10.0.0",
     "tsify": "^5.0.4",
     "typescript": "^4.2.4",
     "vinyl-buffer": "^1.0.1",
