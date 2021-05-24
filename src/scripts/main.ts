@@ -1,6 +1,5 @@
+// import { migrateFa4ToFa5 } from './utilities/utils'; uncomment to migrate fa4 to fa5
 
-// Activates bootstrap features that require javascript
-$(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-    $('[data-toggle="popover"]').popover()
-}); 
+document.addEventListener('DOMContentLoaded', () => {
+    // migrateFa4ToFa5(); uncomment to migrate fa4 to fa5
+});

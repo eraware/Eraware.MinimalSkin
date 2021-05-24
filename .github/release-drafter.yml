@@ -1,0 +1,22 @@
+branches:
+  - master
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+      - 'enhancement'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+  - title: '🧰 Maintenance'
+    label: 'chore'
+change-template: '* $TITLE (#$NUMBER) Thanks @$AUTHOR'
+template: |
+  ## Changes
+
+  $CHANGES
+  
+  ## Thanks to all contributors
+  $CONTRIBUTORS
