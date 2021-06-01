@@ -1,4 +1,6 @@
-﻿@mixin mainMenu() {
+﻿$breakpoint: 768px;
+
+@mixin mainMenu() {
     nav#main-menu {
         display: flex;
         flex-direction: row-reverse;
@@ -7,10 +9,6 @@
         align-items: center;
         padding: 1rem;
         font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-
-        @media (min-width:var(--skin-menu-collapse-size, 768px)){
-            flex-wrap: nowrap;
-        }
 
         >button {
             display: block;
@@ -141,6 +139,100 @@
                                 button{
                                     &::after{
                                         transform: rotate(90deg);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        @media (min-width:$breakpoint){
+            /* desktop overrides */
+            >button {
+                display: none;
+            }
+            >ul{ /* root */
+                display: flex;
+                flex-direction: row;
+                height: auto;
+                background-color: transparent;
+                color: var(--dnn-color-primary, blue);
+                overflow: visible;
+                >li{
+                    position: relative;
+                    &:not(:last-child){
+                        border-bottom: none;
+                    }
+                    >.menu-item{
+                        span, a{
+                            color: var(--dnn-color-primary, blue);
+                        }
+                        >button{
+                            width: 0;
+                            height: 0;
+                            border-left: 8px solid transparent;
+                            border-right: 8px solid transparent;
+                            border-top: 8px solid var(--dnn-color-primary, blue);
+                            align-self: center;
+                            &::before, &::after{
+                                background-color: transparent;
+                            }
+                        }
+                    }
+                    >ul{ /* First level */
+                        position: absolute;
+                        right: 0;
+                        background-color: var(--dnn-color-primary, blue);
+                        >li{
+                            border: none;
+                            &:not(:last-child){
+                                border-bottom: none;
+                            }
+                            border: none;
+                            span, a{
+                                margin-right: 2rem;
+                            }
+                            >.menu-item{
+                                span, a{
+                                    color: var(--dnn-color-primary-contrast, white);
+                                }
+                                >button{
+                                    &::before, &::after{
+                                        background-color: var(--dnn-color-primary-contrast, white);
+                                    }
+                                    &::before{
+                                        transform: rotate(45deg) translate(5px, 0);
+                                    }
+                                    &::after{
+                                        transform: rotate(-45deg) translate(5px, 0);
+                                    }
+                                }
+                                &.expanded{
+                                    >button{
+                                        &::before{
+                                            transform: rotate(45deg) translate(0, 5px);
+                                        }
+                                        &::after{
+                                            transform: rotate(-45deg) translate(0, -5px);
+                                        }
+                                    }
+                                }
+                            }
+                            >ul{ /* second level */
+                                background-color:var(--dnn-color-primary-light, lightblue);
+                                li{
+                                    border: none;
+                                    border-bottom: none;
+                                    &:not(:last-child){
+                                        border-bottom: none;
+                                    }
+                                    ul{
+                                        li{
+                                            font-size: 0.8em;
+                                            margin-left: 1em;
+                                        }
                                     }
                                 }
                             }
