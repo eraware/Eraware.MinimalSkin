@@ -52,10 +52,10 @@ export class ThemeSettings {
         this.containersPath = `Portals\\_default\\Containers\\${this.packageName}\\`;
 
         // This makes build decisions depending on bootstrap and fontawesome preferences.
-        this.useBootstrap = 'all';
+        this.useBootstrap = 'no';
         this.useFontAwesome = false;
 
         // This saves the last used test site url.
-        this.testSiteUrl = "http://dnn.localtest.me";
+        this.testSiteUrl = "http://991.localtest.me";
     }
 }
