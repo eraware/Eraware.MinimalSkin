@@ -1,0 +1,12 @@
+﻿@import 'menu';
+
+@mixin header() {
+    header {
+        @include mainMenu();
+        
+        // Svg logo needs to be sized or it has 0 width
+        img.dnnLogo {
+            min-width: 150px;
+        }
+    }
+}
