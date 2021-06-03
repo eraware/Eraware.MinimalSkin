@@ -61,6 +61,7 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
+    "@types/cheerio": "^0.22.29",
     "gifsicle": "^5.2.0"
   }
 }
