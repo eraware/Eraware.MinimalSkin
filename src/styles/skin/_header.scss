@@ -1,4 +1,5 @@
 ﻿@import 'menu';
+@import 'search';
 
 @mixin header() {
     header {
@@ -7,6 +8,50 @@
         // Svg logo needs to be sized or it has 0 width
         img.dnnLogo {
             min-width: 150px;
+        }
+    }
+
+    .menu-row{
+        display: flex;
+        justify-content: space-between;
+        .menu-column{
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            .dnnSearch{
+                @include search();
+            }
+        }
+    }
+
+    .user-controls{
+        background-color: var(--dnn-color-dark, darkgray);
+        color: var(--dnn-color-light, lightgray);
+        a, span{
+            color: var(--dnn-color-light, lightgray);
+            text-decoration: none;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            &:hover, &:focus{
+                outline: none;
+                text-decoration: underline;
+            }
+        }
+        .wrapper{
+            display: flex;
+            justify-content: flex-end;
+            gap: 2rem;
+            align-items: center;
+            .language-object{
+                flex-grow: 1;
+            }
+            .registerGroup{
+                >ul{
+                    list-style-type: none;
+                    display: flex;
+                    gap: 2rem;
+                    align-items: center;
+                }
+            }
         }
     }
 }

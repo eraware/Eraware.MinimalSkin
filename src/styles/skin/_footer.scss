@@ -1,0 +1,14 @@
+@mixin footer(){
+    footer{
+        background-color: var(--dnn-color-dark, #333);
+        color: var(--dnn-color-light, #ccc);
+        .wrapper{
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            .copyright{
+                margin-left: auto;
+            }
+        }
+    }
+}
