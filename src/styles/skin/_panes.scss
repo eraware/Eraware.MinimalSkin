@@ -1,0 +1,21 @@
+@mixin panes(){
+    .halves, .thirds, .quarters, .left-aside, .right-aside{
+        display: grid;
+        gap: 1rem;
+    }
+    .halves{
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .thirds{
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .quarters{
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .left-aside{
+        grid-template-columns: 1fr 2fr;
+    }
+    .right-aside{
+        grid-template-columns: 2fr 1fr;
+    }
+}
