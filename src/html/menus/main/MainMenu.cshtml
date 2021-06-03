@@ -1,0 +1,59 @@
+@using DotNetNuke.Web.DDRMenu;
+@using System.Dynamic;
+@inherits DotNetNuke.Web.Razor.DotNetNukeWebPage<dynamic>
+
+<nav id="main-menu">
+    <button>
+        <div class="bar"></div>
+    </button>
+    @RenderPages(Model.Source.root.Children)
+</nav>
+
+@helper RenderPages(IEnumerable<MenuNode> pages)
+{
+    if (!pages.Any())
+    {
+        return;
+    }
+
+    <ul>
+        @foreach (var page in pages)
+        {
+            var liClasses = new List<string>();
+            if (page.Selected)
+            {
+                liClasses.Add("selected");
+            }
+            if (page.Breadcrumb)
+            {
+                liClasses.Add("breadcrumb");
+            }
+            if (page.HasChildren())
+            {
+                liClasses.Add("hasChildren");
+            }
+
+            <li class="@string.Join(" ", liClasses)">
+                <div class="menu-item">
+                    @if (page.Enabled)
+                    {
+                        <a href="@page.Url" target="@page.Target">@page.Text</a>
+                    }
+                    else
+                    {
+                        <span>@page.Text</span>
+                    }
+                    @if (page.HasChildren())
+                    {
+                        <button>></button>
+                    }
+                </div>
+
+                @if (page.HasChildren())
+                {
+                    @RenderPages(page.Children)
+                }
+            </li>
+        }
+    </ul>
+}

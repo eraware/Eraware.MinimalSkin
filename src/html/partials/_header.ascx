@@ -1,17 +1,29 @@
 <header>
-    <div class="bg-primary">
-        <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-                <div class="navbar-brand">
-                    <dnn:logo id="DnnLogo" runat="server" CssClass="dnnLogo" />
-                </div>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbar">
-                    <dnn:Menu id="mainMenu" runat="server" MenuStyle="menus\main" NodeSelector="*"></dnn:Menu>
-                </div>
-            </nav>
+    <div class="user-controls">
+        <div class="wrapper">
+            <dnn:Language id="dnnLanguage" runat="server"
+                ShowMenu="False"
+                ShowLinks="True"
+                ItemTemplate='<a href="[URL]">[CULTURE:LanguageNativeName]</a>'
+                AlternateTemplate='<a href="[URL]">[CULTURE:LanguageNativeName]</a>'
+                SelectedItemTemplate="<span></span>"
+                ShowCountry="false"
+                />
+            <dnn:LOGIN ID="dnnLogin" CssClass="LoginLink" runat="server" LegacyMode="false" />
+            <dnn:USER ID="dnnUser" runat="server" LegacyMode="false" />
+        </div>
+    </div>
+    <div class="menu-row wrapper">
+        <dnn:logo id="DnnLogo" runat="server" CssClass="dnnLogo" />
+        <div class="menu-column">
+            <dnn:Menu id="mainMenu"
+                runat="server"
+                MenuStyle="menus\main"
+                NodeSelector="*">
+            </dnn:Menu>
+            <div class="dnnSearch">
+                <dnn:SEARCH ID="dnnSearch" runat="server" ShowSite="false" ShowWeb="false" EnableTheming="true" CssClass="SearchButton" />
+            </div>
         </div>
     </div>
 </header>
