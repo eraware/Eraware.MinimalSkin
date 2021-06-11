@@ -224,11 +224,14 @@ ul.dnnAdminTabNav li a,
 .dnnTertiaryAction {
     padding: 6px;
 }
+
 /* PrimaryAction */
 .dnnPrimaryAction, .dnnFormItem input[type="submit"], a.dnnPrimaryAction {
     border: var(--dnn-controls-border-size, 1px) solid var(--dnn-color-primary-dark, #026ecc);
     background: var(--dnn-color-primary, rgb(2,139,255));
-    color: var(--dnn-color-primary-contrast, #efefef);
+    &:active, &:hover, &:link, &:visited{
+        color: var(--dnn-color-primary-contrast, #efefef);
+    }
     &:hover, &:active{
         border-color: var(--dnn-color-primary, rgb(2,139,255));
         background: var(--dnn-color-primary-light, #36a1ff);
