@@ -52,7 +52,7 @@
     "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.2",
     "gulp-zip": "^5.1.0",
-    "inquirer": "^8.1.0",
+    "inquirer": "^8.1.2",
     "merge2": "^1.4.1",
     "node-sass": "^6.0.1",
     "popper.js": "^1.16.1",
