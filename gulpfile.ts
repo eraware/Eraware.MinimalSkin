@@ -114,7 +114,11 @@ function scripts(){
     ]))
     .pipe(concat('skin.min.js'))
     .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(uglify())
+    .pipe(uglify({
+        compress: {
+            drop_debugger: false,
+        },
+    }))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(`../Skins/${themeSettings.packageName}/js`));
 }
