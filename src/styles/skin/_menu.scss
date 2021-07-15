@@ -194,6 +194,7 @@
                         position: absolute;
                         right: 0;
                         background-color: var(--dnn-color-primary, blue);
+                        transition: all 300ms ease-in-out;
                         >li{
                             border: none;
                             &:not(:last-child){
