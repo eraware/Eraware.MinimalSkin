@@ -10,7 +10,6 @@ const color = require('gulp-color');
 const concat = require('gulp-concat');
 const debug = require('gulp-debug');
 const del = require('del');
-const gitVersion = require('git-tag-version');
 const gulpif = require('gulp-if');
 const gulpOrder = require('gulp-order');
 const imagemin = require('gulp-imagemin');
@@ -24,6 +23,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const tsify = require('tsify');
 const uglify = require('gulp-uglify');
 const zip = require('gulp-zip');
+const packageJson = require("./package.json");
 
 const themeSettings = new ThemeSettings();
 var semVer = {
@@ -45,9 +45,7 @@ function clean(){
 }
 
 function version(cb: any){
-    semVer.fullSemVer = gitVersion({
-        uniqueSnapshot: true
-    });
+    semVer.fullSemVer = packageJson.version;
     semVer.major = Number.parseInt(semVer.fullSemVer.split('.')[0]);
     semVer.minor = Number.parseInt(semVer.fullSemVer.split('.')[1]);
     semVer.patch = Number.parseInt(semVer.fullSemVer.split('.')[2]);
