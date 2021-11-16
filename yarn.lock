@@ -357,10 +357,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/gulp-debug@^2.0.31":
-  version "2.0.31"
-  resolved "https://registry.yarnpkg.com/@types/gulp-debug/-/gulp-debug-2.0.31.tgz#7800e85c347791ed7e25437dc697b9b5ba8c1f4f"
-  integrity sha512-y2pav+vXAHhbCdG6dL2wedAn1ToGyqy6pmmQrfs6TTo+195QUHmZNXZpEtk3IG2pegLu2j7PpfR3DHx9noFryQ==
+"@types/gulp-debug@^2.0.32":
+  version "2.0.32"
+  resolved "https://registry.yarnpkg.com/@types/gulp-debug/-/gulp-debug-2.0.32.tgz#2484925ad2a3d12f04f62743cf86b23335f4efa0"
+  integrity sha512-unpBrWKPtcuiyG0RU/TmKzq21VZ+NBye1vAgQdWhtZsgHEeizFjMMxXwjT6/cxMaO45fLpWPQZhjADmEzdGyXQ==
   dependencies:
     "@types/node" "*"
 
