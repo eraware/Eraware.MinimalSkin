@@ -6,3 +6,7 @@ mergeable:
         no_empty:
           enabled: true
           message: 'A milestone must be assigned to this pull request'
+      - do: label
+        no_empty:
+          enabled: true
+          message: 'A label must be assigned to this pull request'
