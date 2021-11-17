@@ -10,3 +10,7 @@ mergeable:
         no_empty:
           enabled: true
           message: 'A label must be assigned to this pull request'
+      - do: description
+        no_empty:
+          enabled: true
+          message: 'A description must be provided'
