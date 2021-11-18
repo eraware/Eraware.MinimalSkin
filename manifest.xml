@@ -1,75 +1,78 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <dotnetnuke type="Package" version="9.0">
-    <packages>
-        <package name="x-x-x" type="Skin" version="x-x-x">
-            <friendlyName>x-x-x</friendlyName>
-            <description>x-x-x</description>
-            <iconFile>ExtensionIcon.png</iconFile>
-            <owner>
-                <name>x-x-x</name>
-                <organization>x-x-x</organization>
-                <url>x-x-x</url>
-                <email>x-x-x</email>
-            </owner>
-            <license src="LICENSE" />
-            <releaseNotes src="releaseNotes.txt" />
-            <dependencies>
-                <dependency type="coreVersion">09.00.00</dependency>
-            </dependencies>
-            <components>
-                <component type="Skin">
-                    <skinFiles>
-                        <skinName>x-x-x</skinName>
-                        <basePath>x-x-x</basePath>
-                    </skinFiles>
-                </component>
-                <component type="ResourceFile">
-                    <resourceFiles>
-                        <basePath>x-x-x</basePath>
-                        <resourceFile>
-                            <name>skinResources.zip</name>
-                        </resourceFile>
-                    </resourceFiles>
-                </component>
-                <component type="ResourceFile">
-                    <resourceFiles>
-                        <basePath>x-x-x</basePath>
-                        <resourceFile>
-                            <name>containersResources.zip</name>
-                        </resourceFile>
-                    </resourceFiles>
-                </component>
-                <component type="Config">
-                    <config>
-                        <configFile>web.config</configFile>
-                        <install>
-                            <configuration>
-                                <nodes configfile="web.config">
-                                <node path="/configuration/system.webServer" targetpath="/configuration/system.webServer/staticContent" action="update" collision="ignore">
-                                    <staticContent>
-                                    </staticContent>
-                                </node>
-                                <node path="/configuration/system.webServer/staticContent" action="update" key="fileExtension" collision="ignore">
-                                    <remove fileExtension=".otf" />
-                                    <mimeMap fileExtension=".otf" mimeType="font/otf" />
-                                    <remove fileExtension=".svg" />
-                                    <mimeMap fileExtension=".svg" mimeType="image/svg+xml" />
-                                    <remove fileExtension=".woff" />
-                                    <mimeMap fileExtension=".woff" mimeType="font/x-woff" />
-                                    <remove fileExtension=".woff2" />
-                                    <mimeMap fileExtension=".woff2" mimeType="application/font-woff2" />
-                                </node>
-                                </nodes>
-                            </configuration>
-                        </install>
-                        <uninstall>
-                            <configuration>
-                                <nodes />
-                            </configuration>
-                        </uninstall>
-                    </config>
-                    </component>
-            </components>
-        </package>
-    </packages>
+  <packages>
+    <package name="x-x-x" type="Skin" version="01.02.00">
+      <friendlyName>Eraware minimal theme</friendlyName>
+      <description>The Eraware minimal theme is built for speed and simplicity.
+It has a single js and css minimied file.
+It also avoids loading the DNN default.css and uses a single variables file to allow theme customization.
+</description>
+      <iconFile>ExtensionIcon.png</iconFile>
+      <owner>
+        <name>Daniel Valadas</name>
+        <organization>Eraware</organization>
+        <url>https://eraware.ca</url>
+        <email>info@danielvaladas.com</email>
+      </owner>
+      <license src="LICENSE" />
+      <releaseNotes src="releaseNotes.txt" />
+      <dependencies>
+        <dependency type="coreVersion">09.00.00</dependency>
+      </dependencies>
+      <components>
+        <component type="Skin">
+          <skinFiles>
+            <skinName>ca.eraware.themes.minimal</skinName>
+            <basePath>Portals\_default\Skins\ca.eraware.themes.minimal\</basePath>
+          </skinFiles>
+        </component>
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath>Portals\_default\Skins\ca.eraware.themes.minimal\</basePath>
+            <resourceFile>
+              <name>skinResources.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath>Portals\_default\Skins\ca.eraware.themes.minimal\</basePath>
+            <resourceFile>
+              <name>containersResources.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
+        <component type="Config">
+          <config>
+            <configFile>web.config</configFile>
+            <install>
+              <configuration>
+                <nodes configfile="web.config">
+                  <node path="/configuration/system.webServer" targetpath="/configuration/system.webServer/staticContent" action="update" collision="ignore">
+                    <staticContent>
+                    </staticContent>
+                  </node>
+                  <node path="/configuration/system.webServer/staticContent" action="update" key="fileExtension" collision="ignore">
+                    <remove fileExtension=".otf" />
+                    <mimeMap fileExtension=".otf" mimeType="font/otf" />
+                    <remove fileExtension=".svg" />
+                    <mimeMap fileExtension=".svg" mimeType="image/svg+xml" />
+                    <remove fileExtension=".woff" />
+                    <mimeMap fileExtension=".woff" mimeType="font/x-woff" />
+                    <remove fileExtension=".woff2" />
+                    <mimeMap fileExtension=".woff2" mimeType="application/font-woff2" />
+                  </node>
+                </nodes>
+              </configuration>
+            </install>
+            <uninstall>
+              <configuration>
+                <nodes />
+              </configuration>
+            </uninstall>
+          </config>
+        </component>
+      </components>
+    </package>
+  </packages>
 </dotnetnuke>

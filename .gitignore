@@ -5,3 +5,4 @@ install
 .nuke/temp
 build/bin
 build/obj
+artifacts

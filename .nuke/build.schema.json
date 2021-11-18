@@ -74,8 +74,10 @@
               "Clean",
               "Compile",
               "Install",
+              "Package",
               "Settings",
-              "StageFiles"
+              "StageFiles",
+              "UpdateManifest"
             ]
           }
         },
@@ -88,8 +90,10 @@
               "Clean",
               "Compile",
               "Install",
+              "Package",
               "Settings",
-              "StageFiles"
+              "StageFiles",
+              "UpdateManifest"
             ]
           }
         },

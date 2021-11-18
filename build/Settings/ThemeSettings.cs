@@ -1,3 +1,5 @@
+using System;
+
 namespace Settings
 {
     public record ThemeSettings
@@ -69,5 +71,6 @@ namespace Settings
         /// Gets or sets the url of the local test site.
         /// </summary>
         public string TestSiteUrl {get;set;} = "http://dnn.localtest.me";
+        public Version Version { get; set; } = new Version(0, 1, 0);
     }
 }

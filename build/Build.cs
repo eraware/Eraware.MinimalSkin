@@ -7,13 +7,17 @@ using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Npm;
+using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
 using Settings;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
+using static Nuke.Common.IO.CompressionTasks;
 using static Nuke.Common.Tools.Npm.NpmTasks;
 using static Nuke.Common.Utilities.ConsoleUtility;
+using System.Xml;
+using System.Globalization;
 
 class Build : NukeBuild
 {
@@ -27,6 +31,10 @@ class Build : NukeBuild
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+
+    [GitVersion]
+    readonly GitVersion GitVersion;
+
 
     [ThemeSettings]
     readonly ThemeSettings ThemeSettings;
@@ -44,8 +52,71 @@ class Build : NukeBuild
             NpmInstall();
         });
 
+    Target UpdateManifest => _ => _
+        .Executes(() => {
+            ThemeSettings.Version = new Version(GitVersion.MajorMinorPatch);
+            ThemeSettings.SaveSettings();
+            var manifest = RootDirectory / "manifest.xml";
+            var doc = new XmlDocument();
+                doc.Load(manifest);
+                var packages = doc.SelectNodes("dotnetnuke/packages/package");
+                foreach (XmlNode package in packages)
+                {
+                    var packageName = package.Attributes["Package"];
+                    if (packageName != null){
+                        packageName.Value = ThemeSettings.Package.Name;
+                    }
+
+                    var version = package.Attributes["version"];
+                    version.Value =
+                        GitVersion != null
+                        ? $"{GitVersion.Major.ToString("00", CultureInfo.InvariantCulture)}.{GitVersion.Minor.ToString("00", CultureInfo.InvariantCulture)}.{GitVersion.Patch.ToString("00", CultureInfo.InvariantCulture)}"
+                        : "00.01.00";
+
+                    var packageFriendlyName = package.SelectSingleNode("friendlyName");
+                    packageFriendlyName.InnerText = ThemeSettings.Package.FriendlyName;
+
+                    var packageDescription = package.SelectSingleNode("description");
+                    packageDescription.InnerText = ThemeSettings.Package.Description;
+
+                    var owner = package.SelectSingleNode("owner");
+                    owner.SelectSingleNode("name").InnerText = ThemeSettings.Owner.Name;
+                    owner.SelectSingleNode("organization").InnerText = ThemeSettings.Owner.Organization;
+                    owner.SelectSingleNode("url").InnerText = ThemeSettings.Owner.Url;
+                    owner.SelectSingleNode("email").InnerText = ThemeSettings.Owner.Email;
+                   
+                    var components = package.SelectNodes("components/component");
+                    foreach (XmlNode component in components)
+                    {
+                        if (component.Attributes["type"].Value == "ResourceFile"){
+                            var resourceFiles = component.SelectSingleNode("resourceFiles");
+                            var basePath = resourceFiles.SelectSingleNode("basePath");
+                            var resourceFile = resourceFiles.SelectSingleNode("resourceFile");
+                            var name = resourceFile.SelectSingleNode("name");
+                            if (name.InnerText == "containersResources.zip"){
+                                basePath.InnerText = ThemeSettings.ContainersPath;
+                            }
+                            if (name.InnerText == "skinResources.zip"){
+                                basePath.InnerText = ThemeSettings.SkinPath;
+                            }
+                        }
+
+                        if (component.Attributes["type"].Value == "Skin"){
+                            var skinFiles = component.SelectSingleNode("skinFiles");
+                            skinFiles.SelectSingleNode("skinName").InnerText = ThemeSettings.Package.Name;
+                            skinFiles.SelectSingleNode("basePath").InnerText = ThemeSettings.SkinPath;
+                        }
+                    }
+                    
+                    Logger.Normal($"Updated package {package.Attributes["name"].Value} to version {version.Value}");
+                }
+                doc.Save(manifest);
+                Logger.Normal($"Saved {manifest}");
+        });
+
     Target Compile => _ => _
         .DependsOn(Install)
+        .DependsOn(UpdateManifest)
         .Executes(() =>
         {
             NpmRun(s => s.SetCommand("build"));
@@ -142,4 +213,22 @@ class Build : NukeBuild
             DirectoryExistsPolicy.Merge,
             FileExistsPolicy.Overwrite);
     });
+
+    Target Package => _ => _
+        .DependsOn(StageFiles)
+        .Produces(Directories.ArtifactsDirectory)
+        .Executes(() => {
+            Compress(
+                Directories.DistDirectory / "skin",
+                Directories.DistDirectory / "skinResources.zip");
+            DeleteDirectory(Directories.DistDirectory / "skin");
+            Compress(
+                Directories.DistDirectory / "containers",
+                Directories.DistDirectory / "containersResources.zip");
+            DeleteDirectory(Directories.DistDirectory / "containers");
+            var releaseFile = Directories.ArtifactsDirectory / $"{ThemeSettings.Package.Name}_{GitVersion.MajorMinorPatch}.zip";
+            Compress(
+                Directories.DistDirectory,
+                releaseFile);
+        });
 }
