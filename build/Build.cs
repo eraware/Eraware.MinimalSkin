@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.CI;
+using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -19,6 +20,13 @@ using static Nuke.Common.Utilities.ConsoleUtility;
 using System.Xml;
 using System.Globalization;
 
+[GitHubActions(
+    "PR_Validation",
+    GitHubActionsImage.WindowsLatest,
+    ImportGitHubTokenAs = "GithubToken",
+    OnPullRequestBranches = new [] {"master", "main", "develop", "development", "release/*"},
+    InvokedTargets = new[] { nameof(Package)}
+)]
 class Build : NukeBuild
 {
     /// Support plugins are available for:
