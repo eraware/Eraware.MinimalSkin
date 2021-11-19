@@ -18,6 +18,10 @@
           "type": "boolean",
           "description": "Indicates to continue a previously failed build attempt"
         },
+        "GithubToken": {
+          "type": "string",
+          "description": "Github Token"
+        },
         "Help": {
           "type": "boolean",
           "description": "Shows the help text for this build assembly"
@@ -73,8 +77,10 @@
             "enum": [
               "Clean",
               "Compile",
+              "Deploy",
               "Install",
               "Package",
+              "Release",
               "Settings",
               "StageFiles",
               "UpdateManifest"
@@ -89,8 +95,10 @@
             "enum": [
               "Clean",
               "Compile",
+              "Deploy",
               "Install",
               "Package",
+              "Release",
               "Settings",
               "StageFiles",
               "UpdateManifest"

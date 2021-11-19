@@ -8,6 +8,8 @@ using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Npm;
+using Nuke.Common.Tools.GitHub;
+using Nuke.Common.Tools.GitReleaseManager;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
 using Settings;
@@ -15,10 +17,13 @@ using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.IO.CompressionTasks;
+using static Nuke.Common.Tools.GitHub.GitHubTasks;
+using static Nuke.Common.Tools.GitReleaseManager.GitReleaseManagerTasks;
 using static Nuke.Common.Tools.Npm.NpmTasks;
 using static Nuke.Common.Utilities.ConsoleUtility;
 using System.Xml;
 using System.Globalization;
+using Nuke.Common.Git;
 
 [GitHubActions(
     "PR_Validation",
@@ -26,6 +31,13 @@ using System.Globalization;
     ImportGitHubTokenAs = "GithubToken",
     OnPullRequestBranches = new [] {"master", "main", "develop", "development", "release/*"},
     InvokedTargets = new[] { nameof(Package)}
+)]
+[GitHubActions(
+    "Release",
+    GitHubActionsImage.WindowsLatest,
+    ImportGitHubTokenAs = "GithubToken",
+    OnPushBranches = new [] {"master", "main", "release/*"},
+    InvokedTargets = new[] { nameof(Release)}
 )]
 class Build : NukeBuild
 {
@@ -39,13 +51,11 @@ class Build : NukeBuild
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+    [Parameter("Github Token")] readonly string GithubToken;
 
-    [GitVersion]
-    readonly GitVersion GitVersion;
-
-
-    [ThemeSettings]
-    readonly ThemeSettings ThemeSettings;
+    [GitRepository] readonly GitRepository GitRepository;
+    [GitVersion] readonly GitVersion GitVersion;
+    [ThemeSettings] readonly ThemeSettings ThemeSettings;
 
     Target Clean => _ => _
         .Before(Compile)
@@ -238,5 +248,34 @@ class Build : NukeBuild
             Compress(
                 Directories.DistDirectory,
                 releaseFile);
+        });
+
+    Target Release => _ => _
+        .DependsOn(Package)
+        .Executes(() => {
+            var artifacts = GlobFiles(Directories.ArtifactsDirectory, "*");
+            GitReleaseManagerCreate(s => s
+                .SetPassword(GithubToken)
+                .SetRepositoryOwner(GitRepository.GetGitHubOwner())
+                .SetRepositoryName(GitRepository.GetGitHubName())
+                .SetPrerelease(GitRepository.IsOnReleaseBranch())
+                .AddAssetPaths(artifacts));
+        });
+
+    Target Deploy => _ => _
+        .DependsOn(StageFiles)
+        .Executes(() =>{
+            EnsureCleanDirectory(RootDirectory / ThemeSettings.ContainersPath);
+            EnsureCleanDirectory(RootDirectory / ThemeSettings.SkinPath);
+            CopyDirectoryRecursively(
+                Directories.DistDirectory / "containers",
+                RootDirectory.Parent.Parent.Parent / ThemeSettings.ContainersPath,
+                DirectoryExistsPolicy.Merge,
+                FileExistsPolicy.Overwrite);
+            CopyDirectoryRecursively(
+                Directories.DistDirectory / "skin",
+                RootDirectory.Parent.Parent.Parent / ThemeSettings.SkinPath,
+                DirectoryExistsPolicy.Merge,
+                FileExistsPolicy.Overwrite);
         });
 }
