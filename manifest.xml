@@ -36,7 +36,7 @@ It also avoids loading the DNN default.css and uses a single variables file to a
         </component>
         <component type="ResourceFile">
           <resourceFiles>
-            <basePath>Portals\_default\Skins\ca.eraware.themes.minimal\</basePath>
+            <basePath>Portals\_default\Containers\ca.eraware.themes.minimal\</basePath>
             <resourceFile>
               <name>containersResources.zip</name>
             </resourceFile>

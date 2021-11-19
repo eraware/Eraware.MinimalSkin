@@ -77,7 +77,6 @@
             "enum": [
               "Clean",
               "Compile",
-              "Deploy",
               "Install",
               "Package",
               "Release",
@@ -95,7 +94,6 @@
             "enum": [
               "Clean",
               "Compile",
-              "Deploy",
               "Install",
               "Package",
               "Release",

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.CI;
@@ -62,7 +63,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             EnsureCleanDirectory(Directories.ArtifactsDirectory);
-            EnsureCleanDirectory(Directories.DistDirectory);
+            EnsureCleanDirectory(Directories.StagingDirectory);
         });
 
     Target Install => _ => _
@@ -198,36 +199,36 @@ class Build : NukeBuild
     .DependsOn(Clean)
     .DependsOn(Compile)
     .Executes(() => {
-        GlobFiles(RootDirectory / "src" / "containers", "*.ascx")
+        GlobFiles(RootDirectory / "containers", "*.ascx")
             .ForEach(file =>
                 CopyFileToDirectory(
                     file,
-                    Directories.DistDirectory / "containers",
+                    Directories.StagingDirectory / "containers",
                     FileExistsPolicy.Overwrite,
                     true));
         CopyFileToDirectory(
             RootDirectory / "LICENSE",
-            Directories.DistDirectory,
+            Directories.StagingDirectory,
             FileExistsPolicy.Overwrite,
             true);
         CopyFile(
             RootDirectory / "manifest.xml",
-            Directories.DistDirectory / "manifest.dnn",
+            Directories.StagingDirectory / "manifest.dnn",
             FileExistsPolicy.Overwrite,
             true);
         CopyFileToDirectory(
             RootDirectory / "releaseNotes.txt",
-            Directories.DistDirectory,
+            Directories.StagingDirectory,
             FileExistsPolicy.Overwrite,
             true);
         CopyDirectoryRecursively(
-            RootDirectory / "src" / "images",
-            Directories.DistDirectory / "skin" / "Images",
+            RootDirectory / "images",
+            Directories.StagingDirectory / "skin" / "Images",
             DirectoryExistsPolicy.Merge,
             FileExistsPolicy.Overwrite);
         CopyDirectoryRecursively(
-            RootDirectory / "src" / "html",
-            Directories.DistDirectory / "skin",
+            RootDirectory / "html",
+            Directories.StagingDirectory / "skin",
             DirectoryExistsPolicy.Merge,
             FileExistsPolicy.Overwrite);
     });
@@ -237,16 +238,16 @@ class Build : NukeBuild
         .Produces(Directories.ArtifactsDirectory)
         .Executes(() => {
             Compress(
-                Directories.DistDirectory / "skin",
-                Directories.DistDirectory / "skinResources.zip");
-            DeleteDirectory(Directories.DistDirectory / "skin");
+                Directories.StagingDirectory / "skin",
+                Directories.StagingDirectory / "skinResources.zip");
+            DeleteDirectory(Directories.StagingDirectory / "skin");
             Compress(
-                Directories.DistDirectory / "containers",
-                Directories.DistDirectory / "containersResources.zip");
-            DeleteDirectory(Directories.DistDirectory / "containers");
+                Directories.StagingDirectory / "containers",
+                Directories.StagingDirectory / "containersResources.zip");
+            DeleteDirectory(Directories.StagingDirectory / "containers");
             var releaseFile = Directories.ArtifactsDirectory / $"{ThemeSettings.Package.Name}_{GitVersion.MajorMinorPatch}.zip";
             Compress(
-                Directories.DistDirectory,
+                Directories.StagingDirectory,
                 releaseFile);
         });
 
@@ -260,22 +261,5 @@ class Build : NukeBuild
                 .SetRepositoryName(GitRepository.GetGitHubName())
                 .SetPrerelease(GitRepository.IsOnReleaseBranch())
                 .AddAssetPaths(artifacts));
-        });
-
-    Target Deploy => _ => _
-        .DependsOn(StageFiles)
-        .Executes(() =>{
-            EnsureCleanDirectory(RootDirectory / ThemeSettings.ContainersPath);
-            EnsureCleanDirectory(RootDirectory / ThemeSettings.SkinPath);
-            CopyDirectoryRecursively(
-                Directories.DistDirectory / "containers",
-                RootDirectory.Parent.Parent.Parent / ThemeSettings.ContainersPath,
-                DirectoryExistsPolicy.Merge,
-                FileExistsPolicy.Overwrite);
-            CopyDirectoryRecursively(
-                Directories.DistDirectory / "skin",
-                RootDirectory.Parent.Parent.Parent / ThemeSettings.SkinPath,
-                DirectoryExistsPolicy.Merge,
-                FileExistsPolicy.Overwrite);
         });
 }
