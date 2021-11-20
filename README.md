@@ -8,12 +8,12 @@
 5. In the command line, run `npm install` to fetch the dependencies.
 
 ## Customizing your theme
-To cusomize your theme to your needs, run `npm settings` and answer a couple of questions.
+To cusomize your theme to your needs, run `npm run settings` and answer a couple of questions.
 
 ## Development
 The build scripts have a live-server proxy than will automatically rebuild upon any file change and reload your browser. This is really useful for fast development but has limitations such as not being able to use the persona bar using the proxy.
 
-1. Run `npm watch`.
+1. Run `npm run watch`.
 2. When asked, enter the url of the site you would normally visit.
 3. That site will be proxied as http://localhost:3000 and will live-reload unpon any file change.
 

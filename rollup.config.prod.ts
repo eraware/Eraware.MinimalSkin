@@ -1,4 +1,3 @@
-import { defineConfig } from 'rollup';
 import typescript from '@rollup/plugin-typescript';
 import { terser } from "rollup-plugin-terser";
 import sourcemaps from "rollup-plugin-sourcemaps";
@@ -6,9 +5,8 @@ import scss from 'rollup-plugin-scss';
 import themeSettings from "./theme-settings.json";
 import copy from 'rollup-plugin-copy';
 import cleaner from 'rollup-plugin-cleaner';
-import browsersync from 'rollup-plugin-browsersync';
 
-export default defineConfig([{
+export default {
     input: 'src/scripts/main.ts',
     output: {
         file: `../../../${themeSettings.SkinPath}/js/skin.min.js`,
@@ -51,14 +49,5 @@ export default defineConfig([{
             flatten: false,
             verbose: true,
         }),
-        browsersync({
-            proxy: themeSettings.TestSiteUrl,
-            files: [
-                `../../../${themeSettings.SkinPath}/**/*`,
-                `../../../${themeSettings.ContainersPath}/**/*`,
-            ],
-            inject: true,
-        }),
     ],
-},
-]);
+};

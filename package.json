@@ -8,8 +8,8 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "rollup --config rollup.config.ts --configPlugin typescript",
-    "watch": "rollup --config rollup.config.ts --configPlugin typescript -w",
+    "build": "rollup --config rollup.config.prod.ts --configPlugin typescript",
+    "watch": "rollup --config rollup.config.dev.ts --configPlugin typescript -w",
     "settings": "build.cmd --target Settings"
   },
   "devDependencies": {

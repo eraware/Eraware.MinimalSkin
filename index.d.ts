@@ -8,3 +8,15 @@ declare module 'rollup-plugin-cleaner' {
     
     export = cleaner;
 }
+
+declare module 'rollup-plugin-browsersync' {
+    interface BrowserSyncOptions{
+        proxy: string,
+        files: string[],
+        inject: boolean,
+    }
+
+    function browsersync(options: BrowserSyncOptions): any;
+
+    export = browsersync;
+}
