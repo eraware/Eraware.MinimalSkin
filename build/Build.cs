@@ -261,9 +261,9 @@ class Build : NukeBuild
             GitReleaseManagerCreate(s => s
                 .SetProcessArgumentConfigurator(a => a
                     .Add($"--token {GithubToken}")
-                    .When(GitRepository.IsOnReleaseBranch(), a => a.Add("--pre")))
+                    .Add($"--milestone {GitVersion.MajorMinorPatch}"))
                 .SetRepositoryOwner(GitRepository.GetGitHubOwner())
-                .SetRepositoryName(GitRepository.GetGitHubName()));
-                //.AddAssetPaths(Directories.ArtifactsDirectory));
+                .SetRepositoryName(GitRepository.GetGitHubName())
+                .SetAssetPaths(GlobFiles(Directories.ArtifactsDirectory, "*.zip")));
         });
 }
