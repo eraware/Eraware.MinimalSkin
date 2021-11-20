@@ -263,7 +263,7 @@ class Build : NukeBuild
                     .Add($"--token {GithubToken}")
                     .When(GitRepository.IsOnReleaseBranch(), a => a.Add("--pre")))
                 .SetRepositoryOwner(GitRepository.GetGitHubOwner())
-                .SetRepositoryName(GitRepository.GetGitHubName());
+                .SetRepositoryName(GitRepository.GetGitHubName()));
                 //.AddAssetPaths(Directories.ArtifactsDirectory));
         });
 }
