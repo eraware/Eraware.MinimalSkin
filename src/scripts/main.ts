@@ -1,4 +1,5 @@
 import Menu from './menu/menu';
+import '../styles/main.scss';
 // import { migrateFa4ToFa5 } from './utilities/utils'; uncomment to migrate fa4 to fa5
 
 document.addEventListener('DOMContentLoaded', () => {
