@@ -6,6 +6,7 @@ import scss from 'rollup-plugin-scss';
 import themeSettings from "./theme-settings.json";
 import copy from 'rollup-plugin-copy';
 import cleaner from 'rollup-plugin-cleaner';
+import browsersync from 'rollup-plugin-browsersync';
 
 export default defineConfig([{
     input: 'src/scripts/main.ts',
@@ -49,6 +50,14 @@ export default defineConfig([{
             ],
             flatten: false,
             verbose: true,
+        }),
+        browsersync({
+            proxy: themeSettings.TestSiteUrl,
+            files: [
+                `../../../${themeSettings.SkinPath}/**/*`,
+                `../../../${themeSettings.ContainersPath}/**/*`,
+            ],
+            inject: true,
         }),
     ],
 },

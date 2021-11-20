@@ -192,6 +192,10 @@ class Build : NukeBuild
                 (true, "Yes"),
             }
         );
+        ThemeSettings.TestSiteUrl = PromptForInput(
+            "What is the website url to use for local development?",
+            ThemeSettings.TestSiteUrl
+        );
         ThemeSettings.SaveSettings();
     });
 

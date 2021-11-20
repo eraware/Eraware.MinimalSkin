@@ -11,7 +11,7 @@
     "Email": "info@danielvaladas.com"
   },
   "SkinPath": "Portals\\_default\\Skins\\ca.eraware.themes.minimal\\",
-  "ContainersPath": "Portals\\_default\\Containers\\ca.eraware.themes.minimal\\",
+  "ContainersPath": "Portals\\_default\\Skins\\ca.eraware.themes.minimal\\",
   "TestSiteUrl": "http://dnn.localtest.me",
   "Version": "1.2.0"
 }
