@@ -260,10 +260,11 @@ class Build : NukeBuild
         .Executes(() => {
             var artifacts = GlobFiles(Directories.ArtifactsDirectory, "*");
             GitReleaseManagerCreate(s => s
-                .SetPassword(GithubToken)
+                .SetProcessArgumentConfigurator(a => a
+                    .Add($"--token {GithubToken}")
+                    .Add("--pre"))
                 .SetRepositoryOwner(GitRepository.GetGitHubOwner())
                 .SetRepositoryName(GitRepository.GetGitHubName())
-                .SetPrerelease(GitRepository.IsOnReleaseBranch())
                 .AddAssetPaths(artifacts));
         });
 }
