@@ -258,13 +258,12 @@ class Build : NukeBuild
     Target Release => _ => _
         .DependsOn(Package)
         .Executes(() => {
-            var artifacts = GlobFiles(Directories.ArtifactsDirectory, "*");
             GitReleaseManagerCreate(s => s
                 .SetProcessArgumentConfigurator(a => a
                     .Add($"--token {GithubToken}")
-                    .Add("--pre"))
+                    .When(GitRepository.IsOnReleaseBranch(), a => a.Add("--pre")))
                 .SetRepositoryOwner(GitRepository.GetGitHubOwner())
                 .SetRepositoryName(GitRepository.GetGitHubName())
-                .AddAssetPaths(artifacts));
+                .AddAssetPaths(Directories.ArtifactsDirectory));
         });
 }
