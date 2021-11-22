@@ -2,3 +2,7 @@ node_modules
 dist
 yarn-error.log
 install
+.nuke/temp
+build/bin
+build/obj
+artifacts

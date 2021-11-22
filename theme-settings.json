@@ -1,0 +1,17 @@
+{
+  "Package": {
+    "Name": "ca.eraware.themes.minimal",
+    "FriendlyName": "Eraware minimal theme",
+    "Description": "The Eraware minimal theme is built for speed and simplicity.\r\nIt has a single js and css minimied file.\r\nIt also avoids loading the DNN default.css and uses a single variables file to allow theme customization.\r\n"
+  },
+  "Owner": {
+    "Name": "Daniel Valadas",
+    "Organization": "Eraware",
+    "Url": "https://eraware.ca",
+    "Email": "info@danielvaladas.com"
+  },
+  "SkinPath": "Portals\\_default\\Skins\\ca.eraware.themes.minimal\\",
+  "ContainersPath": "Portals\\_default\\Skins\\ca.eraware.themes.minimal\\",
+  "TestSiteUrl": "http://dnn.localtest.me",
+  "Version": "1.1.1"
+}
