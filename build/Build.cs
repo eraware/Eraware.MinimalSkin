@@ -261,6 +261,13 @@ class Build : NukeBuild
     Target Release => _ => _
         .DependsOn(Package)
         .Executes(() => {
+            var actor = Environment.GetEnvironmentVariable("GITHUB_ACTOR");
+            Git($"config --global user.name '{actor}'");
+            Git($"config --global user.email '{actor}@github.com'");
+            if (IsServerBuild)
+            {
+                Git($"remote set-url origin https://{actor}:{GithubToken}@github.com/{GitRepository.GetGitHubOwner()}/{GitRepository.GetGitHubName()}.git");
+            }
             var gitHubClient = new GitHubClient(new ProductHeaderValue("Nuke"));
             var authToken = new Credentials(GithubToken);
             gitHubClient.Credentials = authToken;
