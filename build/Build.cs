@@ -326,7 +326,7 @@ class Build : NukeBuild
             });
             releaseNotes.AppendLine();
 
-            var version = GitRepository.IsOnMainOrMasterBranch() ? GitVersion.MajorMinorPatch : GitVersion.FullSemVer;
+            var version = GitRepository.IsOnMainOrMasterBranch() ? GitVersion.MajorMinorPatch : GitVersion.NuGetVersionV2;
             GitLogger = (type, output) => Logger.Info(output);
             Git($"tag v{version}");
             Git($"push --tags");
