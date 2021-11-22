@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using MimeKit;
 using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
@@ -9,22 +10,24 @@ using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Npm;
+using Nuke.Common.Tools.Git;
 using Nuke.Common.Tools.GitHub;
-using Nuke.Common.Tools.GitReleaseManager;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
+using Octokit;
 using Settings;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.IO.CompressionTasks;
+using static Nuke.Common.Tools.Git.GitTasks;
 using static Nuke.Common.Tools.GitHub.GitHubTasks;
-using static Nuke.Common.Tools.GitReleaseManager.GitReleaseManagerTasks;
 using static Nuke.Common.Tools.Npm.NpmTasks;
 using static Nuke.Common.Utilities.ConsoleUtility;
 using System.Xml;
 using System.Globalization;
 using Nuke.Common.Git;
+using System.Text;
 
 [GitHubActions(
     "PR_Validation",
@@ -258,12 +261,106 @@ class Build : NukeBuild
     Target Release => _ => _
         .DependsOn(Package)
         .Executes(() => {
-            var artifacts = GlobFiles(Directories.ArtifactsDirectory, "*");
-            GitReleaseManagerCreate(s => s
-                .SetPassword(GithubToken)
-                .SetRepositoryOwner(GitRepository.GetGitHubOwner())
-                .SetRepositoryName(GitRepository.GetGitHubName())
-                .SetPrerelease(GitRepository.IsOnReleaseBranch())
-                .AddAssetPaths(artifacts));
+            var actor = Environment.GetEnvironmentVariable("GITHUB_ACTOR");
+            Git($"config --global user.name '{actor}'");
+            Git($"config --global user.email '{actor}@github.com'");
+            if (IsServerBuild)
+            {
+                Git($"remote set-url origin https://{actor}:{GithubToken}@github.com/{GitRepository.GetGitHubOwner()}/{GitRepository.GetGitHubName()}.git");
+            }
+            var gitHubClient = new GitHubClient(new ProductHeaderValue("Nuke"));
+            var authToken = new Credentials(GithubToken);
+            gitHubClient.Credentials = authToken;
+            var releaseNotes = new StringBuilder();
+            var milestone = GitHubTasks.GetGitHubMilestone(GitRepository, GitVersion.MajorMinorPatch).Result;
+            if (milestone == null){
+                Logger.Warn($"Milestone not found for v{GitVersion.MajorMinorPatch}");
+                releaseNotes.Append("No release notes for this version.");
+                return;
+            }
+
+            var pullRequests = gitHubClient.Repository.PullRequest.GetAllForRepository(
+                GitRepository.GetGitHubOwner(),
+                GitRepository.GetGitHubName(),
+                new PullRequestRequest{
+                    State = ItemStateFilter.All,
+                })
+                .Result
+                .Where(pr =>
+                    pr.Milestone?.Title == milestone.Title &&
+                    pr.Merged == true &&
+                    pr.Milestone?.Title == GitVersion.MajorMinorPatch);
+
+            releaseNotes
+                .AppendLine($"# {GitRepository.GetGitHubName()} {milestone.Title}")
+                .AppendLine()
+                .AppendLine($"A total of {pullRequests.Count()} pull requests where merged in this release.")
+                .AppendLine();
+
+            var groups = pullRequests
+                .GroupBy(pr =>
+                    pr.Labels.Aggregate("", (a,b) => $"{a} {b.Name}"),
+                    (labels, prs) => new { labels, prs });
+            
+            groups.ForEach(group =>
+            {
+                releaseNotes.AppendLine($"## {group.labels}");
+                group.prs.ForEach(pr =>
+                {
+                    releaseNotes.AppendLine($"- {pr.Title}. #{pr.Number} Thanks @{pr.User.Login}");
+                });
+            });
+
+            releaseNotes
+                .AppendLine()
+                .AppendLine("## Checksums")
+                .AppendLine("| File | MD5 checksum |")
+                .AppendLine("|------|--------------|");
+                
+            var files = GlobFiles(Directories.ArtifactsDirectory, "*");
+            files.ForEach(file => {
+                var fileInfo = new FileInfo(file);
+                var fileName = fileInfo.Name;
+                var hash = GetFileHash(file);
+                releaseNotes.AppendLine($"| {fileName} | {hash} |");
+            });
+            releaseNotes.AppendLine();
+
+            var version = GitRepository.IsOnMainOrMasterBranch() ? GitVersion.MajorMinorPatch : GitVersion.NuGetVersionV2;
+            GitLogger = (type, output) => Logger.Info(output);
+            Git($"tag v{version}");
+            Git($"push --tags");
+
+            var newRelease = new NewRelease($"v{version}")
+            {
+                Body = releaseNotes.ToString(),
+                Draft = true,
+                Name = $"v{version}",
+                TargetCommitish = GitVersion.Sha,
+                Prerelease = !GitRepository.IsOnMainOrMasterBranch()
+            };
+            var release = gitHubClient.Repository.Release.Create(
+                GitRepository.GetGitHubOwner(),
+                GitRepository.GetGitHubName(),
+                newRelease).Result;
+            Logger.Info($"{release.Name} released !");
+
+            var artifactFiles = GlobFiles(Directories.ArtifactsDirectory, "*");
+            artifactFiles.ForEach(artifactFile => {
+                var artifact = File.OpenRead(artifactFile);
+                var artifactInfo = new FileInfo(artifactFile);
+                var assetUpload = new ReleaseAssetUpload()
+                {
+                    FileName = artifactInfo.Name,
+                    ContentType = MimeKit.MimeTypes.GetMimeType(artifactInfo.Name),
+                    RawData = artifact
+                };
+                var asset = gitHubClient.Repository.Release.UploadAsset(release, assetUpload).Result;
+                Logger.Info($"Asset {asset.Name} published at {asset.BrowserDownloadUrl}");
+            });
+
+            if (GitRepository.IsOnMainOrMasterBranch()){
+                GitHubTasks.CloseGitHubMilestone(GitRepository, GitVersion.MajorMinorPatch);
+            }
         });
 }
