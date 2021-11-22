@@ -261,6 +261,9 @@ class Build : NukeBuild
     Target Release => _ => _
         .DependsOn(Package)
         .Executes(() => {
+            var gitHubClient = new GitHubClient(new ProductHeaderValue("Nuke"));
+            var authToken = new Credentials(GithubToken);
+            gitHubClient.Credentials = authToken;
             var releaseNotes = new StringBuilder();
             var milestone = GitHubTasks.GetGitHubMilestone(GitRepository, GitVersion.MajorMinorPatch).Result;
             if (milestone == null){
@@ -269,7 +272,7 @@ class Build : NukeBuild
                 return;
             }
 
-            var pullRequests = GitHubTasks.GitHubClient.Repository.PullRequest.GetAllForRepository(
+            var pullRequests = gitHubClient.Repository.PullRequest.GetAllForRepository(
                 GitRepository.GetGitHubOwner(),
                 GitRepository.GetGitHubName(),
                 new PullRequestRequest{
@@ -329,7 +332,7 @@ class Build : NukeBuild
                 TargetCommitish = GitVersion.Sha,
                 Prerelease = !GitRepository.IsOnMainOrMasterBranch()
             };
-            var release = GitHubTasks.GitHubClient.Repository.Release.Create(
+            var release = gitHubClient.Repository.Release.Create(
                 GitRepository.GetGitHubOwner(),
                 GitRepository.GetGitHubName(),
                 newRelease).Result;
@@ -345,7 +348,7 @@ class Build : NukeBuild
                     ContentType = MimeKit.MimeTypes.GetMimeType(artifactInfo.Name),
                     RawData = artifact
                 };
-                var asset = GitHubTasks.GitHubClient.Repository.Release.UploadAsset(release, assetUpload).Result;
+                var asset = gitHubClient.Repository.Release.UploadAsset(release, assetUpload).Result;
                 Logger.Info($"Asset {asset.Name} published at {asset.BrowserDownloadUrl}");
             });
 
