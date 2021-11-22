@@ -299,7 +299,7 @@ class Build : NukeBuild
 
             var groups = pullRequests
                 .GroupBy(pr =>
-                    pr.Labels.Aggregate("", (a,b) => $"{a}, {b.Name}"),
+                    pr.Labels.Aggregate("", (a,b) => $"{a} {b.Name}"),
                     (labels, prs) => new { labels, prs });
             
             groups.ForEach(group =>
