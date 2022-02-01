@@ -16,7 +16,7 @@
     "@fortawesome/fontawesome-free": "^5.15.3",
     "@rollup/plugin-typescript": "^8.3.0",
     "@types/bootstrap": "^4.5.0",
-    "@types/node": "^16.11.9",
+    "@types/node": "^17.0.14",
     "bootstrap": "^4.6.0",
     "popper.js": "^1.16.1",
     "rollup": "^2.60.0",
