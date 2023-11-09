@@ -31,14 +31,14 @@ using System.Text;
 
 [GitHubActions(
     "PR_Validation",
-    GitHubActionsImage.WindowsLatest,
+    GitHubActionsImage.UbuntuLatest,
     ImportGitHubTokenAs = "GithubToken",
     OnPullRequestBranches = new [] {"master", "main", "develop", "development", "release/*"},
     InvokedTargets = new[] { nameof(Package)}
 )]
 [GitHubActions(
     "Release",
-    GitHubActionsImage.WindowsLatest,
+    GitHubActionsImage.UbuntuLatest,
     ImportGitHubTokenAs = "GithubToken",
     OnPushBranches = new [] {"master", "main", "release/*"},
     InvokedTargets = new[] { nameof(Release)}
