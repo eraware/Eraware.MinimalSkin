@@ -208,7 +208,7 @@ class Build : NukeBuild
     .DependsOn(Clean)
     .DependsOn(Compile)
     .Executes(() => {
-        RootDirectory.GlobFiles("containers", "*.ascx")
+        (RootDirectory / "containers").GlobFiles("*.ascx")
             .ForEach(file =>
                 CopyFileToDirectory(
                     file,
