@@ -1,6 +1,6 @@
 using Nuke.Common;
 using Nuke.Common.IO;
-
+using Nuke.Common.Utilities;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.SerializationTasks;
 using static Nuke.Common.NukeBuild;
@@ -17,22 +17,23 @@ namespace Settings
         /// <param name="themeSettings">The current theme settings.</param>
         /// <returns>The theme settings.</returns>
         public static ThemeSettings GetSettings(this ThemeSettings themeSettings){
-            if (!FileExists(RootDirectory / settingsFileName)){
+            if (!(RootDirectory / settingsFileName).FileExists()){
                 var settings = new ThemeSettings();
                 settings.UseBootstrap = UseBootstrap.No;
-                JsonSerializeToFile(settings, RootDirectory / settingsFileName);
+                (RootDirectory / settingsFileName).WriteJson(settings);
                 return themeSettings;
             }
 
-            return JsonDeserializeFromFile<ThemeSettings>(RootDirectory / settingsFileName);
+            return (RootDirectory / settingsFileName).ReadJson<ThemeSettings>();
         }
 
         /// <summary>
         /// Saves the current settings to a file.
         /// </summary>
         /// <param name="themeSettings">The current theme settings.</param>
-        public static void SaveSettings(this ThemeSettings themeSettings){
-            JsonSerializeToFile(themeSettings, RootDirectory / settingsFileName);
+        public static void SaveSettings(this ThemeSettings themeSettings)
+        {
+            (RootDirectory / settingsFileName).WriteJson(themeSettings);
         }
     }
 }
