@@ -28,20 +28,23 @@ using System.Xml;
 using System.Globalization;
 using Nuke.Common.Git;
 using System.Text;
+using Serilog;
 
 [GitHubActions(
     "PR_Validation",
-    GitHubActionsImage.WindowsLatest,
-    ImportGitHubTokenAs = "GithubToken",
+    GitHubActionsImage.UbuntuLatest,
+    ImportSecrets = new[] { nameof(GitHubToken) },
     OnPullRequestBranches = new [] {"master", "main", "develop", "development", "release/*"},
-    InvokedTargets = new[] { nameof(Package)}
+    InvokedTargets = new[] { nameof(Package)},
+    FetchDepth = 0
 )]
 [GitHubActions(
     "Release",
-    GitHubActionsImage.WindowsLatest,
-    ImportGitHubTokenAs = "GithubToken",
+    GitHubActionsImage.UbuntuLatest,
+    ImportSecrets = new[] { nameof(GitHubToken) },
     OnPushBranches = new [] {"master", "main", "release/*"},
-    InvokedTargets = new[] { nameof(Release)}
+    InvokedTargets = new[] { nameof(Release)},
+    FetchDepth = 0
 )]
 class Build : NukeBuild
 {
@@ -55,7 +58,7 @@ class Build : NukeBuild
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
-    [Parameter("Github Token")] readonly string GithubToken;
+    [Parameter("Github Token")] readonly string GitHubToken;
 
     [GitRepository] readonly GitRepository GitRepository;
     [GitVersion] readonly GitVersion GitVersion;
@@ -65,8 +68,8 @@ class Build : NukeBuild
         .Before(Compile)
         .Executes(() =>
         {
-            EnsureCleanDirectory(Directories.ArtifactsDirectory);
-            EnsureCleanDirectory(Directories.StagingDirectory);
+            Directories.ArtifactsDirectory.CreateOrCleanDirectory();
+            Directories.StagingDirectory.CreateOrCleanDirectory();
         });
 
     Target Install => _ => _
@@ -129,11 +132,10 @@ class Build : NukeBuild
                             skinFiles.SelectSingleNode("basePath").InnerText = ThemeSettings.SkinPath;
                         }
                     }
-                    
-                    Logger.Normal($"Updated package {package.Attributes["name"].Value} to version {version.Value}");
+                    Log.Debug($"Updated package {package.Attributes["name"].Value} to version {version.Value}");
                 }
                 doc.Save(manifest);
-                Logger.Normal($"Saved {manifest}");
+                Log.Debug($"Saved {manifest}");
         });
 
     Target Compile => _ => _
@@ -206,7 +208,7 @@ class Build : NukeBuild
     .DependsOn(Clean)
     .DependsOn(Compile)
     .Executes(() => {
-        GlobFiles(RootDirectory / "containers", "*.ascx")
+        (RootDirectory / "containers").GlobFiles("*.ascx")
             .ForEach(file =>
                 CopyFileToDirectory(
                     file,
@@ -244,18 +246,12 @@ class Build : NukeBuild
         .DependsOn(StageFiles)
         .Produces(Directories.ArtifactsDirectory)
         .Executes(() => {
-            Compress(
-                Directories.StagingDirectory / "skin",
-                Directories.StagingDirectory / "skinResources.zip");
-            DeleteDirectory(Directories.StagingDirectory / "skin");
-            Compress(
-                Directories.StagingDirectory / "containers",
-                Directories.StagingDirectory / "containersResources.zip");
-            DeleteDirectory(Directories.StagingDirectory / "containers");
+            (Directories.StagingDirectory / "skin").CompressTo(Directories.StagingDirectory / "skinResources.zip");
+            (Directories.StagingDirectory / "skin").DeleteDirectory();
+            (Directories.StagingDirectory / "containers").CompressTo(Directories.StagingDirectory / "containersResources.zip");
+            (Directories.StagingDirectory / "containers").DeleteDirectory();
             var releaseFile = Directories.ArtifactsDirectory / $"{ThemeSettings.Package.Name}_{GitVersion.MajorMinorPatch}.zip";
-            Compress(
-                Directories.StagingDirectory,
-                releaseFile);
+            Directories.StagingDirectory.CompressTo(releaseFile);
         });
 
     Target Release => _ => _
@@ -266,15 +262,15 @@ class Build : NukeBuild
             Git($"config --global user.email '{actor}@github.com'");
             if (IsServerBuild)
             {
-                Git($"remote set-url origin https://{actor}:{GithubToken}@github.com/{GitRepository.GetGitHubOwner()}/{GitRepository.GetGitHubName()}.git");
+                Git($"remote set-url origin https://{actor}:{GitHubToken}@github.com/{GitRepository.GetGitHubOwner()}/{GitRepository.GetGitHubName()}.git");
             }
             var gitHubClient = new GitHubClient(new ProductHeaderValue("Nuke"));
-            var authToken = new Credentials(GithubToken);
+            var authToken = new Credentials(GitHubToken);
             gitHubClient.Credentials = authToken;
             var releaseNotes = new StringBuilder();
             var milestone = GitHubTasks.GetGitHubMilestone(GitRepository, GitVersion.MajorMinorPatch).Result;
             if (milestone == null){
-                Logger.Warn($"Milestone not found for v{GitVersion.MajorMinorPatch}");
+                Log.Warning($"Milestone not found for v{GitVersion.MajorMinorPatch}");
                 releaseNotes.Append("No release notes for this version.");
                 return;
             }
@@ -317,17 +313,17 @@ class Build : NukeBuild
                 .AppendLine("| File | MD5 checksum |")
                 .AppendLine("|------|--------------|");
                 
-            var files = GlobFiles(Directories.ArtifactsDirectory, "*");
+            var files = Directories.ArtifactsDirectory.GlobFiles("*");
             files.ForEach(file => {
                 var fileInfo = new FileInfo(file);
                 var fileName = fileInfo.Name;
-                var hash = GetFileHash(file);
+                var hash = file.GetFileHash();
                 releaseNotes.AppendLine($"| {fileName} | {hash} |");
             });
             releaseNotes.AppendLine();
 
             var version = GitRepository.IsOnMainOrMasterBranch() ? GitVersion.MajorMinorPatch : GitVersion.NuGetVersionV2;
-            GitLogger = (type, output) => Logger.Info(output);
+            GitLogger = (type, output) => Log.Information(output);
             Git($"tag v{version}");
             Git($"push --tags");
 
@@ -343,9 +339,9 @@ class Build : NukeBuild
                 GitRepository.GetGitHubOwner(),
                 GitRepository.GetGitHubName(),
                 newRelease).Result;
-            Logger.Info($"{release.Name} released !");
+            Log.Information($"{release.Name} released !");
 
-            var artifactFiles = GlobFiles(Directories.ArtifactsDirectory, "*");
+            var artifactFiles = Directories.ArtifactsDirectory.GlobFiles("*");
             artifactFiles.ForEach(artifactFile => {
                 var artifact = File.OpenRead(artifactFile);
                 var artifactInfo = new FileInfo(artifactFile);
@@ -356,7 +352,7 @@ class Build : NukeBuild
                     RawData = artifact
                 };
                 var asset = gitHubClient.Repository.Release.UploadAsset(release, assetUpload).Result;
-                Logger.Info($"Asset {asset.Name} published at {asset.BrowserDownloadUrl}");
+                Log.Information($"Asset {asset.Name} published at {asset.BrowserDownloadUrl}");
             });
 
             if (GitRepository.IsOnMainOrMasterBranch()){

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <dotnetnuke type="Package" version="9.0">
   <packages>
-    <package name="x-x-x" type="Skin" version="01.01.01">
+    <package name="x-x-x" type="Skin" version="01.02.00">
       <friendlyName>Eraware minimal theme</friendlyName>
       <description>The Eraware minimal theme is built for speed and simplicity.
 It has a single js and css minimied file.
@@ -36,7 +36,7 @@ It also avoids loading the DNN default.css and uses a single variables file to a
         </component>
         <component type="ResourceFile">
           <resourceFiles>
-            <basePath>Portals\_default\Skins\ca.eraware.themes.minimal\</basePath>
+            <basePath>Portals\_default\Containers\ca.eraware.themes.minimal\</basePath>
             <resourceFile>
               <name>containersResources.zip</name>
             </resourceFile>
