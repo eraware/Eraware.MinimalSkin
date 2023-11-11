@@ -181,7 +181,8 @@ class Build : NukeBuild
             RootDirectory / "html",
             Directories.StagingDirectory / "skin",
             DirectoryExistsPolicy.Merge,
-            FileExistsPolicy.Overwrite);
+            FileExistsPolicy.Overwrite,
+            excludeFile: f => f.Name.EndsWith("ascx.resources"));
     });
 
     Target Package => _ => _
