@@ -81,7 +81,6 @@
               "Install",
               "Package",
               "Release",
-              "Settings",
               "StageFiles",
               "UpdateManifest"
             ]
@@ -98,7 +97,6 @@
               "Install",
               "Package",
               "Release",
-              "Settings",
               "StageFiles",
               "UpdateManifest"
             ]
