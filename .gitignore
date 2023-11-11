@@ -7,3 +7,5 @@ build/bin
 build/obj
 artifacts
 /.vs
+SettingsWizard/obj
+/SettingsWizard/bin
