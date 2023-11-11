@@ -1,5 +1,5 @@
 import themeSettings from "./theme-settings.json";
-import browsersync from "rollup-plugin-browsersync";
+import { browsersync } from "./rollup-plugin-browsersync"
 import * as prodConfig from "./rollup.config.prod";
 
 const devConfig = {
@@ -12,7 +12,6 @@ const devConfig = {
                 `../../../${themeSettings.SkinPath}/**/*`,
                 `../../../${themeSettings.ContainersPath}/**/*`,
             ],
-            inject: true,
         }),
     ]
 };
