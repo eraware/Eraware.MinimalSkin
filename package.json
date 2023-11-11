@@ -10,7 +10,7 @@
   "scripts": {
     "build": "rollup --config rollup.config.prod.ts --configPlugin typescript",
     "watch": "rollup --config rollup.config.dev.ts --configPlugin typescript -w",
-    "settings": "build.cmd --target Settings"
+    "settings": "dotnet run --project ./SettingsWizard/SettingsWizard.csproj"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",

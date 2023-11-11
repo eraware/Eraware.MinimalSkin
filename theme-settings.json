@@ -12,6 +12,8 @@
   },
   "SkinPath": "Portals\\_default\\Skins\\ca.eraware.themes.minimal\\",
   "ContainersPath": "Portals\\_default\\Containers\\ca.eraware.themes.minimal\\",
-  "TestSiteUrl": "http://dnn.localtest.me",
-  "Version": "1.2.0"
+  "UseBootstrap": 0,
+  "UseFontAwesome": false,
+  "TestSiteUrl": "http://dnndev.loc",
+  "Version": "0.1.0"
 }

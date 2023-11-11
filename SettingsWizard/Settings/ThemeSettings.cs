@@ -4,8 +4,8 @@ namespace Settings
 {
     public record ThemeSettings
     {
-        private string skinPath;
-        private string containersPath;
+        private string skinPath = "";
+        private string containersPath = "";
 
         /// <summary>
         /// Gets or sets the package information;

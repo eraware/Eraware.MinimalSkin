@@ -15,7 +15,6 @@ using Nuke.Common.Tools.GitHub;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
 using Octokit;
-using Settings;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
@@ -29,6 +28,7 @@ using System.Globalization;
 using Nuke.Common.Git;
 using System.Text;
 using Serilog;
+using Settings;
 
 [GitHubActions(
     "PR_Validation",
@@ -145,64 +145,6 @@ class Build : NukeBuild
         {
             NpmRun(s => s.SetCommand("build"));
         });
-
-    Target Settings => _ => _
-    .Executes(() =>{
-        ThemeSettings.Package.Name = PromptForInput(
-            "What should the package name be? Please use no spaces or special characters.",
-            ThemeSettings.Package.Name
-        );
-        ThemeSettings.Package.FriendlyName = PromptForInput(
-            "What should the package friendly name be? Displayed to the user in the extensions list.",
-            ThemeSettings.Package.FriendlyName
-        );
-        ThemeSettings.Package.Description = PromptForInput(
-            "What should be the package description?",
-            ThemeSettings.Package.Description
-        );
-        ThemeSettings.Owner.Name = PromptForInput(
-            "What is the name of the package owner?",
-            ThemeSettings.Owner.Name
-        );
-        ThemeSettings.Owner.Organization = PromptForInput(
-            "What organization owns this package?",
-            ThemeSettings.Owner.Organization
-        );
-        ThemeSettings.Owner.Url = PromptForInput(
-            "What is the url to the package owner website?",
-            ThemeSettings.Owner.Url
-        );
-        ThemeSettings.Owner.Email = PromptForInput(
-            "What is the email of the package owner?",
-            ThemeSettings.Owner.Email
-        );
-        ThemeSettings.ContainersPath = PromptForInput(
-            "Where would you like to deploy local containers?",
-            ThemeSettings.ContainersPath
-        );
-        ThemeSettings.ContainersPath = PromptForInput(
-            "Where would you like to deploy local skins?",
-            ThemeSettings.SkinPath
-        );
-        ThemeSettings.UseBootstrap = PromptForChoice(
-            "Would you like your theme to include bootstarp?", new[]{
-                (UseBootstrap.No, "No"),
-                (UseBootstrap.ResponsiveUtilitiesOnly, "Responsive utilities and grid only (44Kb)"),
-                (UseBootstrap.All, "All of bootstrap (221Kb)"),
-            }
-        );
-        ThemeSettings.UseFontAwesome = PromptForChoice(
-            "Would you like to include FontAwesome (206Kb)", new[]{
-                (false, "No"),
-                (true, "Yes"),
-            }
-        );
-        ThemeSettings.TestSiteUrl = PromptForInput(
-            "What is the website url to use for local development?",
-            ThemeSettings.TestSiteUrl
-        );
-        ThemeSettings.SaveSettings();
-    });
 
     Target StageFiles => _ => _
     .DependsOn(Clean)
