@@ -40,7 +40,11 @@ namespace Settings
         /// <param name="themeSettings">The current theme settings.</param>
         public static void SaveSettings(this ThemeSettings themeSettings)
         {
-            File.WriteAllText(settingsFilePath, JsonSerializer.Serialize(themeSettings));
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            };
+            File.WriteAllText(settingsFilePath, JsonSerializer.Serialize(themeSettings, options));
         }
 
         private static string FindSettingsFile(string settingsFileName)
