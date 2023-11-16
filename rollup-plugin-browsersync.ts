@@ -1,15 +1,21 @@
 import bs from "browser-sync";
+import { Plugin } from "rollup";
 const browserSync = bs.create("rollup");
 
-export function browsersync(browsersyncOptions: bs.Options){
+type RollupPluginBrowserSync = (options?: bs.Options) => Plugin;
+
+const browsersync: RollupPluginBrowserSync = (browsersyncOptions) => 
+{
     return {
         name: "browsersync",
-        writeBundle: function(options: any){
+        writeBundle: function(options){
             if (!browserSync.active){
                 browserSync.init(browsersyncOptions || {server: "."});
             } else {
-                browserSync.reload(options.file);
+                browserSync.reload(options.file || "");
             }
         }
     }
-}
+};
+
+export default browsersync;
