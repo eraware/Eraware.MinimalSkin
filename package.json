@@ -16,7 +16,7 @@
     "@fortawesome/fontawesome-free": "^5.15.3",
     "@rollup/plugin-typescript": "^11.1.5",
     "@types/bootstrap": "^4.5.0",
-    "@types/browser-sync": "^2.27.4",
+    "@types/browser-sync": "^2.27.5",
     "@types/node": "^20.9.0",
     "bootstrap": "^4.6.0",
     "browser-sync": "^2.29.3",
