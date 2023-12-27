@@ -1,7 +1,8 @@
 # Minimal Dnn theme
 
 ## Getting started
-1. **Important**: This is a template repository. If you intends to contribute, please use the `Fork` button. If you intend to build a theme using this as a template, please use the `Use this template` button.
+1. **Important**: This is a template repository. If you intend to contribute, please use the `Fork` button. If you intend to build a theme using this as a template, please use the `Use this template` button.
+
 2. Clone the repository to the `Portals\_default` folder of a working Dnn site.
 3. Navigate to the created folder.
 4. You will need `npm` if you do not have it installed yet, please visit [the node website](https://nodejs.org/en/download/).
