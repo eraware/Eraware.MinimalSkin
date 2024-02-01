@@ -17,7 +17,7 @@
     "@rollup/plugin-typescript": "^11.1.5",
     "@types/bootstrap": "^4.5.0",
     "@types/browser-sync": "^2.27.4",
-    "@types/node": "^20.9.0",
+    "@types/node": "^20.11.15",
     "bootstrap": "^4.6.0",
     "browser-sync": "^2.29.3",
     "popper.js": "^1.16.1",
