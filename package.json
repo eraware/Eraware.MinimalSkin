@@ -19,7 +19,7 @@
     "@types/browser-sync": "^2.27.4",
     "@types/node": "^20.9.0",
     "bootstrap": "^4.6.0",
-    "browser-sync": "^2.29.3",
+    "browser-sync": "^3.0.2",
     "popper.js": "^1.16.1",
     "rollup": "^2.79.1",
     "rollup-plugin-cleaner": "^1.0.0",
